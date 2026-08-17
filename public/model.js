@@ -69,7 +69,7 @@
     return {
       bikes:   clamp(Math.round(n(raw.bikes, DEFAULTS.bikes)), 1, 50),
       fund:    fund,
-      term:    n(raw.term, DEFAULTS.term) === 5 ? 5 : 3,
+      term:    [1, 3, 5].indexOf(n(raw.term, DEFAULTS.term)) > -1 ? n(raw.term, DEFAULTS.term) : 3,
       rental:      Math.max(n(raw.rental, DEFAULTS.rental), 0),
       petrol:   Math.max(n(raw.petrol, C.PETROL_WEEKLY), 0),
       herocare:      Math.max(n(raw.herocare, DEFAULTS.herocare), 0),
@@ -107,6 +107,7 @@
 
   // a deposit worth two weeks' rent takes missed payments down to the floor
   function badDebt(i) {
+    if (i.util >= 1) return 0;   // full occupancy — no idle weeks, no arrears
     var cover = i.rental > 0 ? Math.min(1, i.deposit / (2 * i.rental)) : 0;
     return C.BAD_MAX - (C.BAD_MAX - C.BAD_MIN) * cover;
   }
@@ -163,7 +164,11 @@
     var finM = instal * nb;
     var netM = revM - opM - finM;
     if (fund === 'buy') upfront += extrasTotal;
-    var profit = netM * months - upfront;
+
+    // Spread the capital over the term rather than dropping it all into year one,
+    // so the short view is not distorted by a cost the whole term carries.
+    var capitalCharge = upfront * (horizon / years);
+    var profit = netM * months - capitalCharge;
 
     return {
       inputs: i, fund: fund, years: years, horizon: horizon,
@@ -178,7 +183,8 @@
       commit: finM * months,
       ror: revM > 0 ? netM / revM : 0,
       profit: profit,
-      roi: upfront > 0 ? profit / upfront : 0,
+      capitalCharge: capitalCharge,
+      roi: capitalCharge > 0 ? profit / capitalCharge : 0,
       payback: netM > 0 ? upfront / netM : Infinity,
       wkCollected: collectWk * nb,
       wkService: runWk * nb,
