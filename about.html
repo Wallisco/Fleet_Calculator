@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About ScootHero — Why We Exist</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="description" content="ScootHero is a South African company electrifying last-mile delivery — born from the real struggles of delivery drivers and fleet owners on our roads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A0F23; --orange:#F26700; --mint:#79F1A1; --solar:#DFFBCB;
+    --white:#FFFFFF; --paper:#FAFAF7; --grey:#5A5F6E; --line:#E7E9E4; --line-dark:rgba(255,255,255,.14);
+    --radius:14px;
+  }
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Poppins',sans-serif; color:var(--navy); background:var(--white); font-size:15.5px; line-height:1.65; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Lexend',sans-serif; font-weight:600; line-height:1.18;}
+  h1{font-size:clamp(34px,5vw,54px); font-weight:700; letter-spacing:-.01em;}
+  h2{font-size:clamp(25px,3.2vw,34px); margin-bottom:14px;}
+  h3{font-size:19px;}
+  p{color:var(--grey);}
+  a{color:inherit;}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 24px;}
+  section{padding:76px 0;}
+  .eyebrow{font-size:12px; text-transform:uppercase; letter-spacing:.09em; color:var(--orange); font-family:'Lexend',sans-serif; font-weight:700; margin-bottom:12px;}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Lexend',sans-serif; font-weight:600; font-size:14.5px; padding:14px 26px; border-radius:10px; text-decoration:none; transition:transform .15s ease, box-shadow .15s ease; cursor:pointer; border:0;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--orange); color:var(--white); box-shadow:0 8px 22px rgba(242,103,0,.28);}
+  .btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--navy);}
+  .section-solar{background:var(--solar);}
+  .section-navy{background:var(--navy); color:var(--white);}
+  .section-navy h2,.section-navy h3{color:var(--white);}
+  .section-navy p{color:rgba(255,255,255,.72);}
+
+  /* NAV */
+  header{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  nav.wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; flex-wrap:wrap;}
+  .logo img{height:26px; width:auto; display:block;}
+  .nav-links{display:flex; gap:26px; align-items:center; font-size:14px; font-weight:500;}
+  .nav-links a{text-decoration:none;}
+  .nav-links a:hover{color:var(--orange);}
+  .nav-tagged{display:inline-flex; flex-direction:column; align-items:flex-start; line-height:1.15; text-decoration:none;}
+  .nav-tagged .nav-tag{font-size:8.5px; color:var(--orange); font-family:'Lexend',sans-serif; font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
+
+  .nav-links a.active{color:var(--orange); font-family:'Lexend',sans-serif; font-weight:600;}
+  @media(max-width:760px){
+    .nav-links{order:3; width:100%; overflow-x:auto; gap:20px; padding:10px 2px 12px; white-space:nowrap; scrollbar-width:none;}
+    .nav-links::-webkit-scrollbar{display:none;}
+    .nav-links a{flex:0 0 auto; font-size:13.5px;}
+  }
+
+  /* HERO */
+  .about-hero{padding:96px 0 80px;}
+  .about-hero .lede{font-size:18px; max-width:640px; margin-top:20px;}
+  .hero-stat-row{display:flex; gap:40px; flex-wrap:wrap; margin-top:44px; padding-top:28px; border-top:1px solid var(--line);}
+  .hero-stat-row div strong{display:block; font-family:'Lexend',sans-serif; font-size:26px; color:var(--navy);}
+  .hero-stat-row div span{font-size:12.5px; color:var(--grey);}
+
+  /* TWO STRUGGLES */
+  .struggle-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:34px;}
+  @media(max-width:820px){.struggle-grid{grid-template-columns:1fr;}}
+  .struggle-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:34px 32px;}
+  .struggle-card h3{margin-bottom:10px;}
+  .struggle-card p{font-size:14.5px;}
+  .safety-note{margin-top:26px; background:var(--navy); border-radius:var(--radius); padding:26px 30px; color:var(--white); display:flex; gap:18px; align-items:baseline; flex-wrap:wrap;}
+  .safety-note strong{font-family:'Lexend',sans-serif; font-size:30px; color:var(--mint); flex:0 0 auto;}
+  .safety-note p{color:rgba(255,255,255,.75); font-size:13.5px; flex:1; min-width:240px;}
+
+  /* JOURNEY TIMELINE — the road */
+  .road{position:relative; margin-top:48px; padding-left:42px;}
+  .road::before{content:""; position:absolute; left:14px; top:6px; bottom:6px; width:4px; border-radius:4px;
+    background:repeating-linear-gradient(to bottom, var(--navy) 0 22px, transparent 22px 34px);}
+  .stop{position:relative; padding-bottom:46px; max-width:640px;}
+  .stop:last-child{padding-bottom:0;}
+  .stop::before{content:""; position:absolute; left:-36px; top:4px; width:16px; height:16px; border-radius:50%;
+    background:var(--white); border:4px solid var(--orange);}
+  .stop.pivot::before{background:var(--orange); border-color:var(--navy); width:20px; height:20px; left:-38px;}
+  .stop .stop-tag{font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--orange); font-family:'Lexend',sans-serif; font-weight:700; margin-bottom:6px;}
+  .stop h3{margin-bottom:8px;}
+  .stop p{font-size:14.5px;}
+  .stop.pivot{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:26px 26px 26px 28px; margin-left:-8px;}
+
+  /* PILLARS */
+  .pillar-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px 28px; margin-top:34px;}
+  @media(max-width:760px){.pillar-grid{grid-template-columns:1fr;}}
+  .pillar h3{color:var(--mint); font-size:16.5px; margin-bottom:8px;}
+  .pillar p{font-size:14px;}
+
+  /* GOAL */
+  .goal-block{text-align:center; padding:20px 0;}
+  .goal-block .big{font-family:'Lexend',sans-serif; font-weight:700; font-size:clamp(44px,7vw,84px); color:var(--orange); line-height:1;}
+  .goal-block .goal-label{font-size:15px; color:var(--grey); margin-top:14px; max-width:520px; margin-left:auto; margin-right:auto;}
+
+  /* VOICES */
+  .voice-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:34px;}
+  @media(max-width:820px){.voice-grid{grid-template-columns:1fr;}}
+  .voice{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:30px 28px;}
+  .voice blockquote{font-family:'Lexend',sans-serif; font-weight:500; font-size:16.5px; color:var(--navy); line-height:1.5; margin-bottom:14px;}
+  .voice .who{font-size:12.5px; color:var(--grey); text-transform:uppercase; letter-spacing:.06em; font-family:'Lexend',sans-serif; font-weight:600;}
+
+  /* CTA */
+  .cta-final{text-align:center;}
+  .cta-final h2{margin-bottom:10px;}
+  .cta-final p{max-width:520px; margin:0 auto 26px;}
+  .cta-final .btn-ghost{border-color:var(--white); color:var(--white); margin-left:12px;}
+
+  footer{background:var(--navy); color:rgba(255,255,255,.6); padding:34px 0; font-size:13px;}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <nav class="wrap">
+    <a class="logo" href="index.html" aria-label="ScootHero"><img src="assets/logo-navy.png" alt="ScootHero" width="150" height="14"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="who-its-for.html">Who it's for</a>
+      <a href="vehicles.html">Vehicles</a>
+      <details class="nav-drop">
+        <summary>Software</summary>
+        <div class="nav-drop-menu">
+          <a href="marketplace.html#fleetmgmt">Fleet management</a>
+          <a href="marketplace.html#marketplace">Driver marketplace<span class="beta-mini">Beta</span></a>
+        </div>
+      </details>
+      <a href="marketplace.html#fleetmgmt" class="nav-soft-mobile">Fleet mgmt</a>
+      <a href="marketplace.html#marketplace" class="nav-soft-mobile">Driver marketplace</a>
+      <a href="financing.html">Financing</a>
+      <a href="calculators.html">Calculators</a>
+      <a href="coverage.html">Coverage</a>
+      <a href="resources.html">Resources</a>
+      <a href="about.html" class="active">About us</a>
+    </div>
+    <a href="demo.html" class="btn btn-primary" style="padding:11px 20px; font-size:13.5px;">Get a fleet demo</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="wrap">
+    <div class="eyebrow">About ScootHero</div>
+    <h1>A South African answer to a South African problem.</h1>
+    <p class="lede">We're a Cape Town-born company electrifying last-mile delivery — because we saw what petrol fleets were costing the people who run them and the drivers who ride them, and decided an alternative had to exist.</p>
+    <div class="hero-stat-row">
+      <div><strong>2021</strong><span>founded in Cape Town</span></div>
+      <div><strong>430</strong><span>drivers on our first platform release</span></div>
+      <div><strong>2</strong><span>purpose-built EVs: Motov3 &amp; ScootV3</span></div>
+      <div><strong>10,000</strong><span>drivers — our 2030 goal</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROBLEM -->
+<section class="section-solar">
+  <div class="wrap">
+    <div class="eyebrow">Why we exist</div>
+    <h2>Two sides of the same hard road</h2>
+    <p style="max-width:640px;">Last-mile delivery in South Africa is unpredictable, unregulated and unforgiving. It squeezes the people at both ends of every parcel.</p>
+    <div class="struggle-grid">
+      <div class="struggle-card">
+        <h3>For fleet owners</h3>
+        <p>Rising fuel and maintenance costs, mounting traffic fines, breakdowns, roadside call-outs and accident admin eat away at margins that were thin to begin with. Keeping a petrol fleet profitable means fighting on every front at once — routes, repairs, safety, cash flow.</p>
+      </div>
+      <div class="struggle-card">
+        <h3>For drivers</h3>
+        <p>Delivery drivers battle soaring petrol prices, vehicle rental costs, data costs and the cost of simply living — often earning per drop while carrying all the risk. When a bike breaks, the income stops. Many end up fixing their own bikes on street corners because there's nowhere else to turn.</p>
+      </div>
+    </div>
+    <div class="safety-note">
+      <strong>+30%</strong>
+      <p>Accidents involving food delivery drivers rose 30% nationwide in May–June 2020 compared to the year before — 109 incidents in two months. — Hein Jonker, Motorcycle Safety Institute of South Africa</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE JOURNEY -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The road here</div>
+    <h2>How ScootHero came to be</h2>
+    <div class="road">
+      <div class="stop">
+        <div class="stop-tag">The research</div>
+        <h3>We started with the numbers</h3>
+        <p>Extensive research into fleet economics kept landing on the same conclusion: petrol bikes are expensive to run, expensive to maintain, and the costs fall hardest on the people least able to absorb them. An alternative was needed.</p>
+      </div>
+      <div class="stop">
+        <div class="stop-tag">The realisation</div>
+        <h3>Electric was the answer — if the energy problem was solved</h3>
+        <p>EVs were clearly right for last-mile work: fewer moving parts, a fraction of the running cost. But only if charging never took a driver off the road. That led us to battery swapping — and to solar — as the backbone of the model.</p>
+      </div>
+      <div class="stop pivot">
+        <div class="stop-tag">The turning point</div>
+        <h3>The month that made this personal</h3>
+        <p>We watched drivers repairing their own bikes on street corners because no support existed for them. Then, in a single month, six delivery drivers lost their lives on our roads. That was the moment this stopped being a business case and became a responsibility. A platform built to support and empower drivers was created.</p>
+      </div>
+      <div class="stop">
+        <div class="stop-tag">The build</div>
+        <h3>Solutions shaped around the driver</h3>
+        <p>We built for the realities of the job: affordable vehicle rentals, fuel-cost elimination, data optimisation and hands-on maintenance support — designed with first-hand experience of what fleet managers and drivers actually face.</p>
+      </div>
+      <div class="stop">
+        <div class="stop-tag">First release</div>
+        <h3>80 bikes. 430 drivers. Proof.</h3>
+        <p>Our first software release went live with 80 bikes and 430 drivers on the platform — real routes, real shifts, real feedback. Every lesson from that fleet is built into the bikes and the network we run today.</p>
+      </div>
+      <div class="stop">
+        <div class="stop-tag">Today</div>
+        <h3>A full ecosystem, scaling nationally</h3>
+        <p>Two purpose-built EVs engineered for Southern African roads, a growing battery swap network rolling out in phases across the country, financing paths backed by Eqstra, and a driver marketplace connecting fleets to the riders who keep them moving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="section-navy">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--mint);">What we stand for</div>
+    <h2>Our commitments</h2>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <h3>Sustainable energy for delivery</h3>
+        <p>Holistic, reliable electric-vehicle and battery-swap solutions built specifically for the South African delivery market — not adapted to it.</p>
+      </div>
+      <div class="pillar">
+        <h3>Drivers first</h3>
+        <p>Connecting drivers to cost-effective, dependable vehicles and the energy framework to keep them earning — with 24/7 support behind them.</p>
+      </div>
+      <div class="pillar">
+        <h3>Fleet owners supported</h3>
+        <p>Management, maintenance and financing solutions that take the operational burden off fleet owners and put predictability into their numbers.</p>
+      </div>
+      <div class="pillar">
+        <h3>Carbon accountability</h3>
+        <p>Measurable emission savings for the organisations we serve — sustainability you can put in a report, not just a slogan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOAL -->
+<section>
+  <div class="wrap goal-block">
+    <div class="eyebrow">Where we're going</div>
+    <div class="big">10,000</div>
+    <p class="goal-label">Our goal: sustainable vehicles in the hands of 10,000 last-mile delivery drivers by 2030. We're already on our way.</p>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="section-solar">
+  <div class="wrap">
+    <div class="eyebrow">From the riders</div>
+    <h2>The people this is for</h2>
+    <div class="voice-grid">
+      <div class="voice">
+        <blockquote>&ldquo;That first day when I got home, at night I was checking the bike and thought something was wrong. I consulted you and you responded so quickly — and the problem was solved.&rdquo;</blockquote>
+        <div class="who">ScootHero rider, Cape Town</div>
+      </div>
+      <div class="voice">
+        <blockquote>&ldquo;It's only been a couple of weeks that I have been with ScootHero — and the difference in what I keep at the end of the day is real.&rdquo;</blockquote>
+        <div class="who">ScootHero rider, Cape Town</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-navy cta-final">
+  <div class="wrap">
+    <h2>Be part of the next chapter</h2>
+    <p>Whether you run a fleet or ride for one, the switch to electric starts with one conversation.</p>
+    <a href="demo.html" class="btn btn-primary">Get a fleet demo</a>
+    <a href="calculators.html" class="btn btn-ghost">Calculate your savings</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 ScootHero (Pty) Ltd &middot; Cape Town, South Africa</span>
+    <span>info@scoothero.co.za &middot; +27 87 147-8147</span>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('click', function(e){
+  try{
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href');
+
+    /* Same-page anchors: smooth scroll, cancel navigation */
+    if (href.charAt(0) === '#'){
+      var id = href.slice(1);
+      var target = id ? document.getElementById(id) : null;
+      if (!target && (id === 'top' || id === '')) target = document.body;
+      if (!target) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+
+    /* Cross-page links (e.g. about.html, demo.html): in an embedded preview these
+       cannot resolve, so show a notice instead of a broken navigation. On the live site
+       (top-level window) they navigate normally. */
+    var isRelativePage = href.indexOf('://') === -1 && href.indexOf('mailto:') !== 0 && href.indexOf('tel:') !== 0;
+    var isEmbedded = false;
+    try{ isEmbedded = window.self !== window.top; }catch(err){ isEmbedded = true; }
+    if (isRelativePage && isEmbedded){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var note = document.getElementById('previewNote');
+      if (!note){
+        note = document.createElement('div');
+        note.id = 'previewNote';
+        note.style.cssText = 'position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#0A0F23;color:#fff;font-family:Lexend,sans-serif;font-size:13.5px;padding:12px 20px;border-radius:10px;z-index:9999;box-shadow:0 12px 30px rgba(10,15,35,.35);max-width:92vw;text-align:center;';
+        document.body.appendChild(note);
+      }
+      note.textContent = 'This opens ' + href.split('#')[0] + ' \u2014 page-to-page links work on the deployed site, not in this preview.';
+      note.style.display = 'block';
+      clearTimeout(window.__pnTimer);
+      window.__pnTimer = setTimeout(function(){ note.style.display = 'none'; }, 3500);
+    }
+  }catch(err){ /* never block the click entirely */ }
+}, true);
+/* Close the Software dropdown when clicking anywhere else */
+document.addEventListener('click', function(e){
+  document.querySelectorAll('details.nav-drop[open]').forEach(function(d){
+    if (!d.contains(e.target)) d.removeAttribute('open');
+  });
+});
+</script>
+</body>
+</html>

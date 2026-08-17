@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: scoothero-fleet
+    runtime: node
+    plan: starter          # free tier sleeps; proposals would take ~30s to send
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    domains:
+      - fleet.scoothero.co.za
+    envVars:
+      - key: HUBSPOT_TOKEN
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        value: ScootHero <proposals@scoothero.co.za>
+      - key: MAIL_REPLY_TO
+        value: sales@scoothero.co.za
+      - key: SALES_INBOX
+        sync: false
+      - key: BOOKING_URL
+        value: https://fleet.scoothero.co.za/demo.html
+      - key: HUBSPOT_FOLDER
+        value: /calculator-proposals

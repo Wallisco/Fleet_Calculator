@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScootHero — Business in a Box Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A0F23; --navy-2:#141B36; --orange:#F26700; --orange-dk:#C85400;
+  --mint:#79F1A1; --leaf:#DFFBCB; --ink:#0A0F23; --muted:#5A5F73;
+  --line:#E3E5EC; --surface:#F4F5F7; --white:#fff; --warn:#FAECE7; --warn-ink:#993C1D; --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 40px}
+h1,h2,h3{font-family:'Lexend',system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;margin:0}
+.eyebrow{font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin:0 0 8px}
+.lede{color:var(--muted);font-size:15px;max-width:62ch;margin:10px 0 0}
+.head{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:26px}
+.head h1{font-size:clamp(26px,4vw,38px);line-height:1.12}
+
+/* controls */
+.panel{background:var(--surface);border-radius:var(--r);padding:20px}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.field label,.flabel{display:block;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.hint{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.hint b{color:var(--ink);font-family:'Lexend',sans-serif;font-weight:500}
+
+.stepper{display:flex;background:var(--white);border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:190px}
+.stepper button{width:44px;border:0;background:var(--white);font-size:20px;color:var(--orange);cursor:pointer;font-family:'Lexend',sans-serif;line-height:1}
+.stepper button:hover{background:var(--leaf)}
+.stepper input{flex:1;border:0;text-align:center;font-family:'Lexend',sans-serif;font-size:20px;font-weight:600;color:var(--ink);width:100%;padding:10px 0;background:transparent}
+.stepper input:focus{outline:2px solid var(--orange);outline-offset:-2px}
+
+.rand{display:flex;align-items:center;background:var(--white);border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:190px}
+.rand .pre{padding:0 4px 0 13px;font-family:'Lexend',sans-serif;font-size:18px;font-weight:600;color:var(--muted)}
+.rand input{flex:1;border:0;font-family:'Lexend',sans-serif;font-size:20px;font-weight:600;color:var(--ink);width:100%;padding:10px 12px 10px 2px;background:transparent}
+.rand input:focus{outline:2px solid var(--orange);outline-offset:-2px}
+
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{flex:1 1 auto;min-width:96px;padding:10px 12px;border:1px solid var(--line);background:var(--white);border-radius:10px;cursor:pointer;font-family:'Lexend',sans-serif;font-size:12.5px;font-weight:500;color:var(--muted);transition:background .15s,color .15s,border-color .15s}
+.seg button:hover{border-color:var(--orange)}
+.seg button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.seg button:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+
+details.adv{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+details.adv summary{cursor:pointer;font-family:'Lexend',sans-serif;font-size:12.5px;font-weight:600;color:var(--orange);list-style:none}
+details.adv summary::-webkit-details-marker{display:none}
+details.adv summary::before{content:"+ ";font-weight:700}
+details.adv[open] summary::before{content:"– "}
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:16px}
+.adv-grid input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--ink);background:var(--white)}
+.adv-grid input:focus{outline:2px solid var(--orange);outline-offset:-1px}
+.adv-grid .flabel{font-size:11.5px;font-weight:500}
+.adv-note{display:block;margin-top:5px;font-size:11px;color:var(--muted);font-style:italic}
+.petrol-h{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line);font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--ink)}
+.petrol-h em{font-weight:400;font-style:italic;color:var(--muted)}
+.is-hidden{display:none!important}
+
+/* flow bar */
+.flow{margin:34px 0 0}
+.flow-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.flow-head h2{font-size:17px}
+.flow-total{font-family:'Lexend',sans-serif;font-size:13px;color:var(--muted)}
+.flow-total b{color:var(--ink);font-size:16px}
+.bar{display:flex;height:62px;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.seg-b{display:flex;flex-direction:column;justify-content:center;padding:0 12px;min-width:0;transition:flex-basis .45s cubic-bezier(.4,0,.2,1)}
+.seg-b .sl{font-size:10.5px;font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg-b .sv{font-family:'Lexend',sans-serif;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-loss{background:#E8EAEF;color:#6C7185}
+.b-serv{background:var(--navy-2);color:#C9CEE0}
+.b-dist{background:#243055;color:#C9CEE0}
+.b-fuel{background:#243055;color:#C9CEE0}
+.b-fin{background:#3B4468;color:#DCE0EC}
+.b-marg{background:var(--orange);color:#fff}
+.bar-key{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:11.5px;color:var(--muted)}
+.bar-key span{display:flex;align-items:center;gap:6px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.cmp{border-radius:10px;padding:14px 16px}
+.cmp .cl{display:block;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.cmp .cv{display:block;font-family:'Lexend',sans-serif;font-size:26px;font-weight:600;line-height:1.15;margin:5px 0 4px;letter-spacing:-.02em}
+.cmp small{display:block;font-size:11.5px;line-height:1.45}
+.cmp-us{background:var(--navy)}
+.cmp-us .cl{color:var(--mint)}
+.cmp-us .cv{color:#fff}
+.cmp-us small{color:#9AA0B4}
+.cmp-them{background:var(--surface);border:1px solid var(--line)}
+.cmp-them .cl{color:var(--muted)}
+.cmp-them .cv{color:var(--ink)}
+.cmp-them small{color:var(--muted)}
+@media (max-width:620px){.compare{grid-template-columns:1fr}}
+.batt{margin:12px 0 0;padding:11px 14px;border-radius:9px;background:var(--leaf);color:#1E5B2A;font-size:12.5px;line-height:1.5}
+.batt b{font-family:'Lexend',sans-serif;font-weight:600}
+.dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+
+/* results */
+.results{background:var(--navy);border-radius:var(--r);padding:26px;margin-top:34px;color:#fff}
+.results h2{color:#fff;font-size:19px;margin-bottom:4px}
+.results .sub{color:#9AA0B4;font-size:12.5px;margin-bottom:22px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px}
+.kpi{background:var(--navy-2);border:1px solid #2A3354;border-radius:11px;padding:15px 16px}
+.kpi .k{font-family:'Lexend',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--mint);margin-bottom:7px}
+.kpi .v{font-family:'Lexend',sans-serif;font-size:25px;font-weight:600;line-height:1.1;letter-spacing:-.02em}
+.kpi .s{font-size:11.5px;color:#9AA0B4;margin-top:5px;line-height:1.4}
+
+/* hero ROI block */
+.roi{margin-top:16px;background:var(--orange);border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.roi .rk{font-family:'Lexend',sans-serif;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:.92}
+.roi .rs{font-size:14px;color:#FFE9D8;margin-top:7px;max-width:46ch;line-height:1.45}
+.roi .rv{font-family:'Lexend',sans-serif;font-size:clamp(34px,6vw,46px);font-weight:700;line-height:1;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+
+.lev{margin:16px 0 0;padding:13px 15px;border-radius:10px;background:#2A2010;border:1px solid #5A431A;color:#F3D9A8;font-size:12.5px;line-height:1.5}
+.lev b{font-family:'Lexend',sans-serif;color:#FFC46B;font-weight:600}
+
+.horizon{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.hz{background:var(--navy-2);border:1px solid #2A3354;border-radius:11px;padding:18px 20px}
+.hz .hzt{font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:#fff;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #2A3354}
+.hz .row{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0;color:#C4C9DA}
+.hz .row b{font-family:'Lexend',sans-serif;color:#fff;font-weight:500;font-variant-numeric:tabular-nums}
+.hz .row.tot{border-top:1px solid #2A3354;margin-top:8px;padding-top:10px}
+.hz .row.tot b{color:var(--mint);font-size:16px}
+
+/* one-price band */
+.oneprice{margin-top:16px;background:var(--navy);border-radius:12px;padding:20px 22px}
+.op-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px 18px}
+.op-item{display:flex;align-items:center;gap:11px;color:#fff;font-family:'Lexend',sans-serif;font-size:13.5px;font-weight:500;line-height:1.35}
+.op-item svg{width:26px;height:26px;flex:0 0 auto;color:var(--mint)}
+.op-line{margin:16px 0 0;padding-top:14px;border-top:1px solid #2A3354;font-size:13.5px;color:#C4C9DA}
+.op-line b{color:var(--orange);font-family:'Lexend',sans-serif;font-weight:600}
+
+/* process chart */
+.proc{margin-top:34px}
+.proc-phase{margin-top:20px}
+.proc-lbl{display:flex;align-items:center;gap:12px;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.proc-lbl::after{content:"";flex:1;height:1px;background:var(--line)}
+.proc-lbl .tag{background:var(--leaf);color:#1E5B2A;border-radius:99px;padding:3px 10px;letter-spacing:.06em}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.step{border:1px solid var(--line);border-radius:12px;padding:16px 18px;position:relative;background:var(--white)}
+.step .n{font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;margin-bottom:7px}
+.step .t{font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;line-height:1.3;margin-bottom:6px}
+.step .d{font-size:12.5px;color:var(--muted);line-height:1.5}
+.step .val{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-family:'Lexend',sans-serif;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.step .val small{display:block;font-family:'Poppins',sans-serif;font-size:11px;font-weight:400;letter-spacing:0;margin-top:2px}
+.step:not(:last-child)::after{
+  content:"";position:absolute;top:50%;right:-19px;width:12px;height:12px;
+  border-top:2px solid #C9CCD6;border-right:2px solid #C9CCD6;transform:translateY(-50%) rotate(45deg);
+}
+.steps.wk .step{background:var(--navy);border-color:var(--navy);color:#fff}
+.steps.wk .step .d{color:#9AA0B4}
+.steps.wk .step .val{border-top-color:#2A3354;color:var(--mint)}
+.steps.wk .step .val small{color:#9AA0B4}
+.steps.wk .step:not(:last-child)::after{border-color:#3B4468}
+.proc-loop{margin-top:12px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.proc-loop b{font-family:'Lexend',sans-serif;color:var(--ink);font-weight:500}
+
+@media (max-width:760px){
+  .steps{grid-template-columns:1fr;gap:22px}
+  .step:not(:last-child)::after{top:auto;bottom:-17px;right:50%;transform:translateX(50%) rotate(135deg)}
+}
+
+/* tables */
+.sec{margin-top:38px}
+.sec h2{font-size:20px}
+.tbl-scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:12px 14px;font-size:13px;border-bottom:1px solid var(--line)}
+th{font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--surface)}
+th:first-child{border-radius:9px 0 0 0}
+th:last-child{border-radius:0 9px 0 0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.on td{background:#FFF4EC;font-weight:500}
+tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
+.pill[hidden]{display:none}
+.pill{display:inline-block;font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--leaf);color:#1E5B2A;margin-left:8px}
+
+/* risks */
+.risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:16px}
+.risk{border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.risk .rt{background:var(--warn);color:var(--warn-ink);padding:13px 15px}
+.risk .rt .rl{font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.risk .rt .rn{font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;margin-top:3px}
+.risk .rb{padding:13px 15px;font-size:12.5px;flex:1}
+.risk .rb .fx{display:block;font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#0F6E56;margin-bottom:5px}
+.risk .rq{background:var(--surface);padding:9px 15px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line)}
+
+/* capture */
+.capture{margin-top:36px;background:var(--surface);border-radius:var(--r);padding:26px}
+.capture h2{font-size:19px}
+.capture .lede{margin-bottom:18px}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.cap-grid label{display:block;font-family:'Lexend',sans-serif;font-size:11.5px;font-weight:600;margin-bottom:6px}
+.cap-grid input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--ink);background:var(--white)}
+.cap-grid input:focus{outline:2px solid var(--orange);outline-offset:-1px}
+.cap-grid input[aria-invalid="true"]{border-color:#C0392B}
+.consent{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.consent input{margin-top:2px;width:17px;height:17px;accent-color:var(--orange);flex:0 0 auto}
+.cap-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:13px 20px;font-family:'Lexend',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.cap-msg{font-size:13px;margin-top:14px;padding:12px 14px;border-radius:9px;display:none}
+.cap-msg.ok{display:block;background:var(--leaf);color:#1E5B2A}
+.cap-msg.bad{display:block;background:var(--warn);color:var(--warn-ink)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* extras + quote */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--orange)}
+.opt input{margin-top:2px;width:18px;height:18px;accent-color:var(--orange);flex:0 0 auto;cursor:pointer}
+.opt:has(input:checked){border-color:var(--orange);background:#FFF8F3}
+.ot{display:block;font-family:'Lexend',sans-serif;font-size:13.5px;font-weight:600;color:var(--ink)}
+.ot em{display:block;font-style:normal;font-size:12px;font-weight:500;color:var(--orange);margin-top:3px}
+.od{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+.quote{margin-top:18px;background:var(--surface);border-radius:12px;padding:20px 22px}
+.qt{font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+.qrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13.5px;border-bottom:1px solid var(--line)}
+.qrow b{font-family:'Lexend',sans-serif;font-weight:500;font-variant-numeric:tabular-nums}
+.qrow.qtot{border-bottom:0;border-top:2px solid var(--navy);margin-top:6px;padding-top:12px;font-size:15px}
+.qrow.qtot b{font-size:19px;font-weight:600;color:var(--navy)}
+.qnote{margin:12px 0 0;font-size:11.5px;color:var(--muted)}
+
+/* cta */
+.cta{margin-top:36px;background:var(--navy);border-radius:var(--r);padding:26px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.cta h2{color:#fff;font-size:19px}
+.cta p{color:#9AA0B4;font-size:13px;margin:6px 0 0;max-width:52ch}
+.btn{background:var(--orange);color:#fff;border:0;border-radius:10px;padding:14px 26px;font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
+.btn:hover{background:var(--orange-dk)}
+.btn:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.foot{margin-top:26px;font-size:11px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:16px}
+
+@media (max-width:760px){
+  .horizon{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .bar{height:auto;flex-direction:column}
+  .seg-b{flex-basis:auto!important;padding:10px 12px;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
+  .seg-b .sl{font-size:11px}
+  .roi{flex-direction:column;align-items:flex-start;gap:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <p class="eyebrow">Business in a box</p>
+    <h1>What does a ScootHero fleet return?</h1>
+    <p class="lede">Set the number of bikes you would buy. You'll see what lands in your pocket each month, how long your money takes to come back, and what happens if things go wrong.</p>
+  </header>
+
+  <section class="panel" aria-label="Your fleet">
+    <div class="ctrl-grid">
+
+      <div class="field">
+        <label for="bikes">How many bikes</label>
+        <div class="stepper">
+          <button type="button" id="minus" aria-label="One bike fewer">−</button>
+          <input id="bikes" type="number" min="1" max="50" step="1" value="5" inputmode="numeric" aria-label="Number of bikes">
+          <button type="button" id="plus" aria-label="One bike more">+</button>
+        </div>
+        <p class="hint">Most first-time operators start with 5 to 10.</p>
+      </div>
+
+      <div class="field">
+        <span class="flabel" id="fundLbl">How you pay for them</span>
+        <div class="fixed-fund">Bought outright</div>
+        <div class="seg" role="group" aria-labelledby="fundLbl" hidden>
+          <button type="button" data-fund="buy" aria-pressed="true">Buy outright</button>
+          <button type="button" data-fund="oplease" aria-pressed="false">Operating lease</button>
+          <button type="button" data-fund="lto" aria-pressed="false">Lease to own</button>
+        </div>
+        <p class="hint" id="fundHint">You own the bikes from day one. Ask us about lease options if you would rather not tie up the capital.</p>
+      </div>
+
+      <div class="field">
+        <span class="flabel" id="termLbl">Over how long</span>
+        <div class="seg" role="group" aria-labelledby="termLbl">
+          <button type="button" data-term="3" aria-pressed="true">3 years</button>
+          <button type="button" data-term="5" aria-pressed="false">5 years</button>
+        </div>
+        <p class="hint">Sets both the finance term and the return period below.</p>
+      </div>
+
+      <div class="field is-hidden" id="rateField">
+        <label for="leaserate">Interest rate</label>
+        <div class="rand">
+          <input id="leaserate" type="number" min="0" max="40" step="0.5" value="15" inputmode="decimal" aria-label="Annual finance interest rate, percent">
+          <span class="pre" style="padding:0 13px 0 4px" aria-hidden="true">%</span>
+        </div>
+        <p class="hint"><em>Indicative only.</em> Final rate is set by Eqstra on credit approval.</p>
+      </div>
+
+      <div class="field" id="depositField">
+        <label for="deposit">Rider deposit</label>
+        <div class="rand">
+          <span class="pre" aria-hidden="true">R</span>
+          <input id="deposit" type="number" min="0" step="250" value="1500" inputmode="numeric" aria-label="Rider deposit in rand">
+        </div>
+        <p class="hint" id="depHint">Collected by Paystack before the rider takes the bike, and held against unpaid rent.</p>
+      </div>
+    </div>
+
+    <details class="adv">
+      <summary>Change the assumptions</summary>
+      <div class="adv-grid">
+        <div id="rentWrap"><span class="flabel" id="l1">Weekly rent per bike (R)</span><input id="rental" type="number" min="0" step="25" value="850" aria-labelledby="l1"></div>
+        <div id="kmWrap"><span class="flabel" id="l8">Km per bike per week</span><input id="kmweek" type="number" min="0" max="3000" step="10" value="110" aria-labelledby="l8"><span class="adv-note">* leases only</span></div>
+        <div><span class="flabel" id="l3">Bike price, excl VAT (R)</span><input id="price" type="number" min="0" step="500" value="35000" aria-labelledby="l3"></div>
+        <div><span class="flabel" id="l4">Weeks a bike is rented (%)</span><input id="util" type="number" min="10" max="100" step="1" value="92" aria-labelledby="l4"><span class="adv-note">* indicative</span></div>
+        <div id="depWrap"><span class="flabel" id="l5">Deposit on either lease (%)</span><input id="dep" type="number" min="0" max="50" step="1" value="10" aria-labelledby="l5"></div>
+        <div class="is-hidden"><span class="flabel" id="l12">Admin fee per bike a month (R)</span><input id="adminfee" type="number" min="0" step="5" value="50" aria-labelledby="l12"></div>
+        <div class="is-hidden"><span class="flabel" id="l2">HeroCare, outright (R)</span><input id="herocare" type="number" min="0" step="5" value="465" aria-labelledby="l2"></div>
+        <div class="is-hidden"><span class="flabel" id="l11">HeroCare, leases (R)</span><input id="herocarelease" type="number" min="0" step="5" value="638" aria-labelledby="l11"></div>
+        <div class="is-hidden"><span class="flabel" id="l9">Rate per km (R)</span><input id="kmrate" type="number" min="0" step="0.05" value="0.60" aria-labelledby="l9"></div>
+      </div>
+      <div id="petrolWrap" class="is-hidden">
+        <p class="petrol-h">Comparative petrol bike, per bike per week <em>* placeholders — set your own figures</em></p>
+        <div class="adv-grid">
+          <div><span class="flabel" id="p1l">Instalment or depreciation (R)</span><input id="pfinance" type="number" min="0" step="10" value="210" aria-labelledby="p1l"></div>
+          <div><span class="flabel" id="p2l">Fuel per km (R)</span><input id="pfuelkm" type="number" min="0" step="0.01" value="0.63" aria-labelledby="p2l"></div>
+          <div><span class="flabel" id="p3l">Servicing, tyres (R)</span><input id="pservice" type="number" min="0" step="5" value="55" aria-labelledby="p3l"></div>
+          <div><span class="flabel" id="p4l">Insurance and tracking (R)</span><input id="pinsurance" type="number" min="0" step="10" value="140" aria-labelledby="p4l"></div>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:14px" id="careNote"></p>
+    </details>
+  </section>
+
+  <section class="flow" aria-label="Where the money goes">
+    <div class="flow-head">
+      <h2 id="flowLabel">Where one bike's rent goes each week</h2>
+      <span class="flow-total"><span id="flowGrossLbl">Rent charged: </span><b id="flowGross">R850</b></span>
+    </div>
+    <div class="bar" id="bar">
+      <div class="seg-b b-loss" id="s-loss"><span class="sl">Empty &amp; unpaid</span><span class="sv" id="v-loss">R0</span></div>
+      <div class="seg-b b-serv" id="s-serv"><span class="sl" id="servLbl">HeroCare + admin</span><span class="sv" id="v-serv">R0</span></div>
+      <div class="seg-b b-fuel" id="s-fuel"><span class="sl">Energy</span><span class="sv" id="v-fuel">R0</span></div>
+      <div class="seg-b b-fin" id="s-fin"><span class="sl">Finance</span><span class="sv" id="v-fin">R0</span></div>
+      <div class="seg-b b-marg" id="s-marg"><span class="sl">Yours</span><span class="sv" id="v-marg">R0</span></div>
+    </div>
+    <div class="bar-key">
+      <span><i class="dot" style="background:#E8EAEF"></i>Weeks with no rider, plus rent never collected</span>
+      <span><i class="dot" style="background:var(--navy-2)"></i>HeroCare: maintenance, insurance, tracking, recovery, system</span>
+      <span id="keyFuel"><i class="dot" style="background:#243055"></i>Energy at 62c/km, billed to your business</span>
+      <span><i class="dot" style="background:#3B4468"></i>Monthly finance instalment</span>
+      <span><i class="dot" style="background:var(--orange)"></i>What you keep</span>
+    </div>
+  </section>
+
+    <div class="compare" id="compareWrap">
+      <div class="cmp cmp-us">
+        <span class="cl">Yours on ScootHero</span>
+        <b class="cv" id="cmpUs">R0</b>
+        <small id="cmpUsSub">a week per bike. We build them, run the swap network, service them and give you the system.</small>
+      </div>
+      <div class="cmp cmp-them">
+        <span class="cl">An equivalent petrol bike</span>
+        <b class="cv" id="cmpPetrol">R272</b>
+        <small>a week per bike — and only if you do all the work yourself.</small>
+      </div>
+    </div>
+    <p class="batt" id="battWrap">Battery usage is billed to the driver directly at a <b>60c per km equivalent</b>, so it sits outside your numbers entirely — nothing to fund, nothing to recover.</p>
+  </section>
+
+  <section class="results" aria-label="Your returns">
+    <h2 id="resTitle">5 bikes, bought outright</h2>
+    <p class="sub" id="resSub">Cash you put in: R175 000</p>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k" id="k1L">Cash per month</div><div class="v" id="kMonthly">R0</div><div class="s" id="kMonthlyS">after every cost</div></div>
+      <div class="kpi"><div class="k" id="k2L">Return on revenue</div><div class="v" id="kRor">0%</div><div class="s" id="k2S">of every rand collected</div></div>
+      <div class="kpi"><div class="k" id="k3L">Money back in</div><div class="v" id="kPay">0</div><div class="s" id="kPayS">months</div></div>
+      <div class="kpi"><div class="k" id="k4L">Cash needed to start</div><div class="v" id="kCash">R0</div><div class="s" id="kCashS">the full purchase price</div></div>
+    </div>
+
+    <div class="roi">
+      <div>
+        <div class="rk" id="roiLabel">Return on investment</div>
+        <div class="rs" id="roiSub">over 3 years, on the cash you put in</div>
+      </div>
+      <div class="rv" id="roiVal">0%</div>
+    </div>
+
+    <p class="lev" id="lev" hidden></p>
+
+    <div class="horizon">
+      <div class="hz">
+        <div class="hzt">Over 1 year</div>
+        <div class="row"><span id="l1a">Rent collected</span><b id="y1Rev">R0</b></div>
+        <div class="row"><span id="l1b">Running costs</span><b id="y1Op">R0</b></div>
+        <div class="row"><span id="l1c">Finance</span><b id="y1Fin">—</b></div>
+        <div class="row"><span id="l1d">Less cash you put in</span><b id="y1Cap">R0</b></div>
+        <div class="row tot"><span id="l1e">Profit on your cash</span><b id="y1Prof">R0</b></div>
+        <div class="row"><span id="l1f">Return on investment</span><b id="y1Roi">—</b></div>
+      </div>
+      <div class="hz">
+        <div class="hzt" id="hzTitle">Over 3 years</div>
+        <div class="row"><span id="l2a">Rent collected</span><b id="hzRev">R0</b></div>
+        <div class="row"><span id="l2b">Running costs</span><b id="hzOp">R0</b></div>
+        <div class="row"><span id="l2c">Finance</span><b id="hzFin">—</b></div>
+        <div class="row"><span id="l2d">Less cash you put in</span><b id="hzCap">R0</b></div>
+        <div class="row tot"><span id="l2e">Profit on your cash</span><b id="hzProf">R0</b></div>
+        <div class="row" id="hzComRow"><span id="l2f">Instalments you commit to</span><b id="hzCom">—</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec proc" aria-label="How it works">
+    <h2>How it works</h2>
+    <p class="lede">Three things to set up, then the same cycle every week. Figures below are for your fleet as you've set it.</p>
+
+    <div class="oneprice">
+      <div class="op-items">
+        <div class="op-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M5.5 17.5 9 9h5l3.5 8.5M9 9 8 6H6m8 3h4"/></svg>
+          <span>We build the bikes</span>
+        </div>
+        <div class="op-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="15" height="10" rx="2.5"/><path d="M20 10.5v3"/><path d="m9.8 9.6-2 3h3l-2 3"/></svg>
+          <span>We run the swap network</span>
+        </div>
+        <div class="op-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.6 3.6a5 5 0 0 0-6.2 6.4l-6 6a2 2 0 0 0 2.8 2.8l6-6a5 5 0 0 0 6.4-6.2l-3 3-2.6-.7-.7-2.6z"/></svg>
+          <span>We service the bikes</span>
+        </div>
+        <div class="op-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 20.5h8M12 17v3.5"/><path d="M6.5 13.5v-3M10 13.5v-5M13.5 13.5v-2M17 13.5v-6"/></svg>
+          <span>We give you the system to manage it all in</span>
+        </div>
+      </div>
+      <p class="op-line">All of it in <b>one price</b>. That last part is the bit that matters.</p>
+    </div>
+
+    <div class="proc-phase">
+      <div class="proc-lbl"><span class="tag">Set up once</span></div>
+      <div class="steps">
+        <article class="step">
+          <div class="n">STEP 1</div>
+          <div class="t">Get your bikes</div>
+          <div class="d" id="p1d">Choose your fleet size and how you're paying for it. We deliver, register and hand the bikes over ready to ride.</div>
+        </article>
+        <article class="step">
+          <div class="n">STEP 2</div>
+          <div class="t">Set your rates in Lighthouse</div>
+          <div class="d">Lighthouse is your operator portal. Set the weekly rent and the deposit you charge each rider, and it handles the collection from there.</div>
+          <div class="val" id="p2val">R0 <small>weekly rent · R0 deposit per rider</small></div>
+        </article>
+        <article class="step">
+          <div class="n">STEP 3</div>
+          <div class="t" id="p3t">Put riders on the bikes</div>
+          <div class="d" id="p3d">Take vetted riders from our marketplace, or bring your own. A filled seat is a bike earning; an empty one is the only thing that really costs you.</div>
+          <div class="val" id="p3val">0 <small>seats to fill</small></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="proc-phase">
+      <div class="proc-lbl"><span class="tag">Then every week</span></div>
+      <div class="steps wk">
+        <article class="step">
+          <div class="n">STEP 4</div>
+          <div class="t" id="p4t">Riders pay you</div>
+          <div class="d" id="p4d">Paystack collects the rent up front, before the week starts. You hold their deposit against anything unpaid.</div>
+          <div class="val" id="p4val">R0 <small>collected across your fleet</small></div>
+        </article>
+        <article class="step">
+          <div class="n">STEP 5</div>
+          <div class="t">You pay us <span id="p5rate">R465</span> a bike</div>
+          <div class="d" id="p5d">HeroCare covers maintenance, insurance, tracking and recovery. Distance is charged at 60c per km and redeemed from your rider.</div>
+          <div class="val" id="p5val">R0 <small>out of the money collected</small></div>
+        </article>
+        <article class="step">
+          <div class="n">STEP 6</div>
+          <div class="t">Your payment lands</div>
+          <div class="d">The balance is paid into your account weekly. No invoicing, no chasing riders, no surprise repair bills.</div>
+          <div class="val" id="p6val">R0 <small id="p6sub">yours, every week</small></div>
+        </article>
+      </div>
+      <p class="proc-loop">↻ <span>This cycle repeats every week for as long as the bikes are on the road. Over <b id="procTerm">3 years</b> that's <b id="procWeeks">156 weeks</b> of collections.</span></p>
+    </div>
+  </section>
+
+  <section class="sec is-hidden" id="costCmpSec" aria-label="Cost against a petrol bike">
+    <h2>The same bike on petrol</h2>
+    <p class="lede">Per bike per week, everything in. Set your own petrol figures under the assumptions above — the ones below are placeholders.</p>
+    <div class="tbl-scroll">
+      <table id="costCmp">
+        <thead><tr><th>Per bike per week</th><th class="num">ScootHero</th><th class="num">Petrol</th><th class="num">Difference</th></tr></thead>
+        <tbody id="costCmpBody"></tbody>
+      </table>
+    </div>
+    <p class="hint" id="costCmpNote" style="margin-top:12px"></p>
+  </section>
+
+  <section class="sec" id="cmpSec" aria-label="Compare the three ways to pay">
+    <h2>The three ways to pay, side by side</h2>
+    <p class="lede">Same fleet, same rent. Buying outright earns the most rand; leasing earns the most on every rand you risk.</p>
+    <div class="tbl-scroll">
+      <table id="cmp">
+        <thead><tr>
+          <th>How you pay</th><th class="num">Cash up front</th><th class="num">Monthly instalment</th>
+          <th class="num">Cash per month</th><th class="num" id="cmpH">Profit over 3 yrs</th>
+          <th class="num">Return on investment</th><th class="num">Committed</th>
+        </tr></thead>
+        <tbody>
+          <tr data-row="buy"><td>Buy outright<span class="pill" id="pillBuy" hidden>Selected</span></td><td class="num" id="c-buy-up">—</td><td class="num">—</td><td class="num" id="c-buy-m">—</td><td class="num" id="c-buy-p">—</td><td class="num" id="c-buy-r">—</td><td class="num">—</td></tr>
+          <tr data-row="oplease"><td>Operating lease at 15.5%<span class="pill" id="pillOp" hidden>Selected</span></td><td class="num" id="c-op-up">—</td><td class="num" id="c-op-i">—</td><td class="num" id="c-op-m">—</td><td class="num" id="c-op-p">—</td><td class="num" id="c-op-r">—</td><td class="num" id="c-op-c">—</td></tr>
+          <tr data-row="lto"><td>Lease to own at 16%<span class="pill" id="pillLto" hidden>Selected</span></td><td class="num" id="c-lto-up">—</td><td class="num" id="c-lto-i">—</td><td class="num" id="c-lto-m">—</td><td class="num" id="c-lto-p">—</td><td class="num" id="c-lto-r">—</td><td class="num" id="c-lto-c">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" id="cmpNote" style="margin-top:12px"></p>
+  </section>
+
+  <section class="sec" aria-label="What can go wrong and how it is handled">
+    <h2>What can go wrong — and what we do about it</h2>
+    <p class="lede">You've never run a fleet before. These are the six things that sink first-time operators, and what's built into the package to stop each one.</p>
+    <div class="risks" id="risks"></div>
+  </section>
+
+  <section class="sec" id="extrasSec" aria-label="What to include">
+    <h2>What to include</h2>
+    <p class="lede">Tick what you want on the proposal. Everything below is a one-off cost per bike, excluding VAT.</p>
+
+    <div class="opts">
+      <label class="opt" for="optPdi">
+        <input type="checkbox" id="optPdi" checked>
+        <span class="ob">
+          <span class="ot">Pre-delivery inspection <em id="pdiEach">R2 500 a bike</em></span>
+          <span class="od">Every bike is checked, set up and road-ready before it reaches you. We recommend keeping this on.</span>
+        </span>
+      </label>
+
+      <label class="opt" for="optBox">
+        <input type="checkbox" id="optBox">
+        <span class="ob">
+          <span class="ot">Delivery boxes, fitted <em id="boxEach">R2 500 a bike</em></span>
+          <span class="od">Weatherproof top box fitted at handover. Skip it if your riders already have their own.</span>
+        </span>
+      </label>
+
+      <label class="opt" for="optGear">
+        <input type="checkbox" id="optGear">
+        <span class="ob">
+          <span class="ot">Helmets and jackets <em>Quoted separately</em></span>
+          <span class="od">Tick this and we will price rider gear with you on the call — it is not included in the total below.</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="quote" id="quoteBox">
+      <div class="qt">Your proposal</div>
+      <div class="qrow"><span id="qBikesL">Bikes</span><b id="qBikes">R0</b></div>
+      <div class="qrow" id="qPdiRow"><span id="qPdiL">Pre-delivery inspection</span><b id="qPdi">R0</b></div>
+      <div class="qrow" id="qBoxRow"><span id="qBoxL">Delivery boxes, fitted</span><b id="qBox">R0</b></div>
+      <div class="qrow" id="qGearRow"><span>Helmets and jackets</span><b>To be quoted</b></div>
+      <div class="qrow qtot"><span>Total, excl VAT</span><b id="qTotal">R0</b></div>
+      <p class="qnote">This is what your invoice would be built from. VAT is added at invoicing.</p>
+    </div>
+  </section>
+
+  <section class="capture" aria-label="Email these numbers to yourself">
+    <h2>Get this as a proposal</h2>
+    <p class="lede">We'll email you a proposal with exactly these numbers, the steps that follow, and a page to sign off when you're ready to proceed.</p>
+    <div class="cap-grid">
+      <div><label for="cName">Your name</label><input id="cName" type="text" autocomplete="name" placeholder="Thabo Mokoena"></div>
+      <div><label for="cEmail">Email address</label><input id="cEmail" type="email" autocomplete="email" placeholder="you@company.co.za" required></div>
+      <div><label for="cCompany">Company</label><input id="cCompany" type="text" autocomplete="organization" placeholder="Optional"></div>
+      <div><label for="cPhone">Mobile</label><input id="cPhone" type="tel" autocomplete="tel" placeholder="Optional"></div>
+    </div>
+    <div class="hp" aria-hidden="true"><label for="cWebsite">Website</label><input id="cWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+    <label class="consent" for="cConsent">
+      <input type="checkbox" id="cConsent">
+      <span>Email me this calculation and store it with my details so ScootHero can follow up about a fleet. I can ask you to delete it at any time.</span>
+    </label>
+    <div class="cap-actions">
+      <button type="button" class="btn" id="capSend">Email me the proposal</button>
+      <button type="button" class="btn-ghost" id="capDownload">Just download it</button>
+    </div>
+    <p class="cap-msg" id="capMsg" role="status"></p>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>Get these numbers on your name</h2>
+      <p>We'll confirm the rent your area supports, check swap station coverage on your routes, and put the finance in front of Eqstra.</p>
+    </div>
+    <a class="btn" href="#" id="ctaBtn">Book a 15-minute call</a>
+  </section>
+
+  <p class="foot">
+    All figures exclude VAT and are estimates, not a quote or an offer of finance. Finance is subject to credit approval through Eqstra, a Nedbank company; rates of 15.5% (operating lease) and 16% (lease to own) are indicative. Rent achievable and running costs vary by area, rider and usage. Returns assume bikes are on rent for the share of weeks you set above, exclude tax, your own admin costs, any residual owing at the end of a lease, and any resale value of the bikes. Speak to us before making a financial decision.
+  </p>
+</div>
+
+<style>
+  /* outright build */
+  #fundLbl + .seg, #rateField, #petrolWrap, #costCmpSec,
+  #s-fuel, #keyFuel, #kmWrap, #cmpSec { display:none !important; }
+  .fixed-fund{display:inline-block;padding:10px 16px;border-radius:10px;background:var(--navy);
+    color:#fff;font-family:'Lexend',sans-serif;font-size:12.5px;font-weight:500}
+</style>
+<script src="model.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var SH = window.SHModel;
+  var state = { bikes:5, fund:'buy', term:3 };
+  var $ = function(id){ return document.getElementById(id); };
+  function num(id, fb){ var v = parseFloat($(id).value); return isFinite(v) ? v : fb; }
+  var R = SH.money, pct = SH.percent;
+
+  function rawInputs(){
+    return {
+      bikes: state.bikes, fund: state.fund, term: state.term,
+      rental:      num('rental',850),
+      kmPerWeek:   num('kmweek',110),
+      leaseRate:   num('leaserate',15),
+      adminMonthly: num('adminfee',50),
+      wantPdi:     $('optPdi').checked,
+      wantBoxes:   $('optBox').checked,
+      wantGear:    $('optGear').checked,
+      pFinance:    num('pfinance',210),
+      pFuelPerKm:  num('pfuelkm',0.63),
+      pService:    num('pservice',55),
+      pInsurance:  num('pinsurance',140),
+      herocare:      num('herocare',465),
+      herocareLease: num('herocarelease',638),
+      kmRate:   num('kmrate',0.60),
+      price:    num('price',35000),
+      util:    num('util',92)/100,
+      dep:     num('dep',10)/100,
+      deposit: num('deposit',1500)
+    };
+  }
+  function inputs(){ return SH.normalise(rawInputs()); }
+  function model(fund, years){ return SH.compute(rawInputs(), fund, years); }
+
+  var RISKS = [
+    { r:'Your rider stops paying', f:'Rent is collected before the wheels turn. Paystack takes a card or debit-order payment up front each week, and you hold a deposit on top of it.', q:'A deposit worth two weeks\u2019 rent brings missed payments down to about 2% of revenue.' },
+    { r:'A bike sits with no rider', f:'Our rider marketplace fills the seat, and refills it if someone leaves. Riders want these seats because Takealot volumes mean more deliveries and no petrol bill.', q:'Every empty week costs you the full rent \u2014 this is the number that matters most.' },
+    { r:'A breakdown takes a bike off the road', f:'HeroCare covers maintenance, parts and labour on a fixed weekly fee, with a service turnaround commitment. Battery swaps take under two minutes at any HeroGo station.', q:'Repairs never arrive as a surprise bill.' },
+    { r:'A bike is crashed or stolen', f:'Insurance, tracking, SOS and recovery are all inside the HeroCare fee. Every bike is tracked from the day it is handed over.', q:'One uninsured write-off would wipe out a year of profit on that bike.' },
+    { r:'There is no work for the bikes', f:'ScootHero is Takealot\u2019s preferred electric motorcycle provider. Demand comes with the fleet \u2014 you are not hunting for delivery work on your own.', q:'This is why the seats fill in the first place.' },
+    { r:'You have never run a fleet', f:'This is the business in a box: bikes, swaps, maintenance, insurance, rider supply, payment collection and a named contact for your first 30 days.', q:'Your job is the seats. We handle the rest.' }
+  ];
+
+  function drawRisks(){
+    var el = $('risks'); if(el.children.length) return;
+    el.innerHTML = RISKS.map(function(x){
+      return '<article class="risk"><div class="rt"><div class="rl">Risk</div><div class="rn">'+x.r+
+        '</div></div><div class="rb"><span class="fx">How it\u2019s handled</span>'+x.f+
+        '</div><div class="rq">'+x.q+'</div></article>';
+    }).join('');
+  }
+
+  function render(){
+    var m = model(state.fund, state.term);
+
+    // flow bar
+    $('flowGross').textContent = R(m.grossWk);
+    var parts = [['s-loss','v-loss',m.lossWk],['s-serv','v-serv',m.careWk+m.adminWk],['s-fuel','v-fuel',m.fuelWk],['s-fin','v-fin',m.finWk],['s-marg','v-marg',Math.max(m.margWk,0)]];
+    var tot = parts.reduce(function(a,p){ return a + Math.max(p[2],0); },0) || 1;
+    parts.forEach(function(p){
+      var v = Math.max(p[2],0);
+      $(p[0]).style.flexBasis = (v/tot*100)+'%';
+      $(p[0]).style.display = v <= 0.5 ? 'none' : '';
+      $(p[1]).textContent = R(v);
+    });
+
+    // headline
+    var label = { buy:'bought outright',
+                  oplease:'on an operating lease at ' + m.leaseRate + '%',
+                  lto:'on lease to own at ' + m.leaseRate + '%' }[state.fund];
+    $('resTitle').textContent = state.bikes + (state.bikes === 1 ? ' bike, ' : ' bikes, ') + label;
+    $('resSub').textContent = 'Cash you put in: ' + R(m.upfront) +
+      (state.fund === 'buy' ? '' : ' \u00b7 instalment ' + R(m.finM) + ' a month for ' + state.term + ' years');
+
+    $('kMonthly').textContent = R(m.netM);
+    $('kMonthlyS').textContent = m.netM >= 0 ? 'after every cost' : 'shortfall \u2014 check your assumptions';
+    $('kRor').textContent = pct(m.ror);
+    $('kPay').textContent = isFinite(m.payback) ? Math.ceil(m.payback) : '\u2014';
+    $('kPayS').textContent = isFinite(m.payback)
+      ? (Math.ceil(m.payback) > m.months ? 'months \u2014 longer than the term' : 'months')
+      : 'not at these numbers';
+    $('kCash').textContent = R(m.upfront);
+    $('kCashS').textContent = state.fund === 'buy' ? 'the full purchase price' : 'deposit and first instalment';
+
+    // hero ROI
+    $('roiVal').textContent = m.upfront > 0 ? pct(m.roi) : '\u2014';
+    $('roiSub').textContent = 'over ' + state.term + ' years, on the ' + R(m.upfront) + ' you put in';
+
+    // one-year view uses the same instalment as the selected finance term
+    var y1 = SH.compute(rawInputs(), state.fund, state.term, 1);
+    if (onRent) {
+      $('l1a').textContent='Rent collected';   $('y1Rev').textContent  = R(y1.revM * y1.months);
+      $('l1b').textContent='Running costs';    $('y1Op').textContent   = '\u2212' + R(y1.opM * y1.months);
+      $('l1c').textContent='Finance';          $('y1Fin').textContent  = y1.finM ? '\u2212' + R(y1.commit) : '\u2014';
+      $('l1d').textContent='Less cash you put in'; $('y1Cap').textContent = '\u2212' + R(y1.upfront);
+      $('l1e').textContent='Profit on your cash';  $('y1Prof').textContent = R(y1.profit);
+      $('l1f').textContent='Return on investment'; $('y1Roi').textContent  = y1.upfront > 0 ? pct(y1.roi) : '\u2014';
+
+      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(m.revM * m.months);
+      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(m.opM * m.months);
+      $('l2c').textContent='Finance';          $('hzFin').textContent  = m.finM ? '\u2212' + R(m.commit) : '\u2014';
+      $('l2d').textContent='Less cash you put in'; $('hzCap').textContent = '\u2212' + R(m.upfront);
+      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(m.profit);
+      $('l2f').textContent='Instalments you commit to'; $('hzCom').textContent = m.commit ? R(m.commit) : '\u2014';
+      $('hzComRow').hidden = !m.commit;
+    } else {
+      var nb = state.bikes;
+      $('l1a').textContent='HeroCare';  $('y1Rev').textContent = R(y1.careWk * 4.345 * nb * 12);
+      $('l1b').textContent='Energy';    $('y1Op').textContent  = R(y1.fuelWk * 4.345 * nb * 12);
+      $('l1c').textContent='Instalments'; $('y1Fin').textContent = R(y1.commit);
+      $('l1d').textContent='Cash up front'; $('y1Cap').textContent = R(y1.upfront);
+      $('l1e').textContent='Total cost';    $('y1Prof').textContent = R(y1.costTotal);
+      $('l1f').textContent='Per bike a week'; $('y1Roi').textContent = R(y1.costWk);
+
+      $('l2a').textContent='HeroCare';  $('hzRev').textContent = R(m.careWk * 4.345 * nb * m.months);
+      $('l2b').textContent='Energy';    $('hzOp').textContent  = R(m.fuelWk * 4.345 * nb * m.months);
+      $('l2c').textContent='Instalments'; $('hzFin').textContent = R(m.commit);
+      $('l2d').textContent='Cash up front'; $('hzCap').textContent = R(m.upfront);
+      $('l2e').textContent='Total cost';    $('hzProf').textContent = R(m.costTotal);
+      $('l2f').textContent='Per bike a week'; $('hzCom').textContent = R(m.costWk);
+      $('hzComRow').hidden = false;
+    }
+    $('hzTitle').textContent = 'Over ' + state.term + ' years';
+
+    // petrol cost table
+    if (!onRent) {
+      var rows = [
+        ['HeroCare — maintenance, insurance, tracking, system', m.careWk, m.inputs.pService + m.inputs.pInsurance],
+        ['Admin fee', m.adminWk, 0],
+        ['Energy / fuel', m.fuelWk, m.petrolFuelWk],
+        ['Instalment', m.finWk, m.inputs.pFinance]
+      ];
+      var html = rows.map(function(r){
+        var d = r[1] - r[2];
+        return '<tr><td>' + r[0] + '</td><td class="num">' + R(r[1]) + '</td><td class="num">' + R(r[2]) +
+               '</td><td class="num" style="color:' + (d > 0 ? '#993C1D' : '#0F6E56') + '">' +
+               (d > 0 ? '+' : '') + R(d) + '</td></tr>';
+      }).join('');
+      var td = m.costWk - m.petrolCostWk;
+      html += '<tr class="on"><td><b>Total per bike per week</b></td><td class="num"><b>' + R(m.costWk) +
+              '</b></td><td class="num"><b>' + R(m.petrolCostWk) + '</b></td><td class="num"><b style="color:' +
+              (td > 0 ? '#993C1D' : '#0F6E56') + '">' + (td > 0 ? '+' : '') + R(td) + '</b></td></tr>';
+      $('costCmpBody').innerHTML = html;
+      $('costCmpNote').textContent = td > 0
+        ? 'On these figures ScootHero costs ' + R(td) + ' a week more per bike, or ' + R(td * 52 * state.bikes) +
+          ' a year across the fleet. What that buys is uptime, one bill, no workshop and no admin — set your own petrol figures above to test it.'
+        : 'On these figures ScootHero costs ' + R(Math.abs(td)) + ' a week less per bike, or ' +
+          R(Math.abs(td) * 52 * state.bikes) + ' a year across the fleet.';
+    }
+
+    // leverage warning
+    var lev = $('lev');
+    if(m.commit > 0){
+      lev.hidden = false;
+      lev.innerHTML = 'Leasing makes the percentage look big because you risk less of your own cash \u2014 but the instalment is due every month whether a bike is rented or not. Over ' +
+        state.term + ' years you commit to <b>' + R(m.commit) + '</b> in instalments, and need <b>' + R(m.finM) +
+        ' a month</b> of rent collected before you earn anything.';
+    } else { lev.hidden = true; }
+
+    // comparison
+    var map = { buy:'buy', oplease:'op', lto:'lto' };
+    $('cmpH').textContent = 'Profit over ' + state.term + ' yrs';
+    ['buy','oplease','lto'].forEach(function(f){
+      var c = model(f, state.term), k = map[f];
+      $('c-'+k+'-up').textContent = R(c.upfront);
+      if(f !== 'buy'){
+        $('c-'+k+'-i').textContent = R(c.finM);
+        $('c-'+k+'-c').textContent = c.commit ? R(c.commit) : '\u2014';
+      }
+      $('c-'+k+'-m').textContent = R(c.netM);
+      $('c-'+k+'-p').textContent = R(c.profit);
+      $('c-'+k+'-r').textContent = c.upfront > 0 ? pct(c.roi) : '\u2014';
+      if (f !== 'buy') {
+        var lbl = document.querySelector('#cmp tr[data-row="' + f + '"] td:first-child');
+        if (lbl) lbl.firstChild.nodeValue = SH.fundLabel(f, c.leaseRate);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#cmp tbody tr'), function(tr){
+      tr.classList.toggle('on', tr.getAttribute('data-row') === state.fund);
+    });
+    $('pillBuy').hidden = state.fund !== 'buy';
+    $('pillOp').hidden  = state.fund !== 'oplease';
+    $('pillLto').hidden = state.fund !== 'lto';
+
+    var buy = model('buy', state.term), op = model('oplease', state.term);
+    var mult = op.upfront > 0 ? Math.floor(buy.upfront/op.upfront) : 0;
+    $('cmpNote').textContent = mult > 1
+      ? 'The cash that buys ' + state.bikes + (state.bikes===1?' bike':' bikes') + ' outright would put roughly ' +
+        (mult*state.bikes) + ' bikes on the road on an operating lease \u2014 more total profit, but a bigger operation to run and an instalment due whether the bike is rented or not.'
+      : '';
+
+    // deposit hint
+    $('depHint').innerHTML = 'Collected by Paystack before the rider takes the bike. At this deposit, missed payments run at <b>' +
+      pct(m.bad) + '</b> of revenue.';
+    // proposal breakdown — outright only
+    $('extrasSec').classList.toggle('is-hidden', !m.onRent);
+    if (m.onRent) {
+      $('pdiEach').textContent = R(m.inputs.pdiPrice) + ' a bike';
+      $('boxEach').textContent = R(m.inputs.boxPrice) + ' a bike';
+      var nb2 = m.inputs.bikes, unit = nb2 === 1 ? ' bike' : ' bikes';
+      $('qBikesL').textContent = nb2 + unit + ' at ' + R(m.inputs.price);
+      $('qBikes').textContent  = R(m.bikeTotal);
+      $('qPdiL').textContent   = 'Pre-delivery inspection, ' + nb2 + unit;
+      $('qPdi').textContent    = R(m.pdiTotal);
+      $('qPdiRow').style.display = m.wantPdi ? '' : 'none';
+      $('qBoxL').textContent   = 'Delivery boxes fitted, ' + nb2 + unit;
+      $('qBox').textContent    = R(m.boxTotal);
+      $('qBoxRow').style.display = m.wantBoxes ? '' : 'none';
+      $('qGearRow').style.display = m.wantGear ? '' : 'none';
+      $('qTotal').textContent  = R(m.proposalTotal);
+    }
+
+    $('cmpUs').textContent = R(m.margWk);
+    $('cmpPetrol').textContent = R(m.petrolWk);
+
+    // Outright is a rental book and shows a return. The leases carry no rider
+    // revenue, so they show a true cost instead.
+    var onRent = m.onRent;
+    $('depositField').style.display = onRent ? '' : 'none';
+    $('rateField').classList.toggle('is-hidden', onRent);
+    $('rentWrap').classList.toggle('is-hidden', !onRent);
+    $('kmWrap').style.opacity = onRent ? '.45' : '1';
+    $('petrolWrap').classList.toggle('is-hidden', onRent);
+    $('keyFuel').style.display = m.fuelToBusiness ? '' : 'none';
+    $('battWrap').style.display = onRent ? '' : 'none';
+    $('compareWrap').style.display = onRent ? '' : 'none';
+    $('costCmpSec').classList.toggle('is-hidden', onRent);
+    $('s-loss').style.display = onRent ? '' : 'none';
+    $('s-marg').style.display = onRent ? '' : 'none';
+
+    $('flowLabel').textContent = onRent
+      ? "Where one bike's rent goes each week"
+      : "What one bike costs you each week";
+    $('flowGrossLbl').textContent = onRent ? 'Rent charged: ' : 'Total: ';
+    $('flowGross').textContent = R(onRent ? m.grossWk : m.costWk);
+    // proposal breakdown — outright only
+    $('extrasSec').classList.toggle('is-hidden', !m.onRent);
+    if (m.onRent) {
+      $('pdiEach').textContent = R(m.inputs.pdiPrice) + ' a bike';
+      $('boxEach').textContent = R(m.inputs.boxPrice) + ' a bike';
+      var nb2 = m.inputs.bikes, unit = nb2 === 1 ? ' bike' : ' bikes';
+      $('qBikesL').textContent = nb2 + unit + ' at ' + R(m.inputs.price);
+      $('qBikes').textContent  = R(m.bikeTotal);
+      $('qPdiL').textContent   = 'Pre-delivery inspection, ' + nb2 + unit;
+      $('qPdi').textContent    = R(m.pdiTotal);
+      $('qPdiRow').style.display = m.wantPdi ? '' : 'none';
+      $('qBoxL').textContent   = 'Delivery boxes fitted, ' + nb2 + unit;
+      $('qBox').textContent    = R(m.boxTotal);
+      $('qBoxRow').style.display = m.wantBoxes ? '' : 'none';
+      $('qGearRow').style.display = m.wantGear ? '' : 'none';
+      $('qTotal').textContent  = R(m.proposalTotal);
+    }
+
+    $('cmpUs').textContent = R(m.margWk);
+    $('cmpPetrol').textContent = R(m.petrolWk);
+
+    if (onRent) {
+      $('k1L').textContent = 'Cash per month';
+      $('kMonthly').textContent = R(m.netM);
+      $('kMonthlyS').textContent = m.netM >= 0 ? 'after every cost' : 'shortfall — check your assumptions';
+      $('k2L').textContent = 'Return on revenue';
+      $('kRor').textContent = pct(m.ror);
+      $('k2S').textContent = 'of every rand collected';
+      $('k3L').textContent = 'Money back in';
+      $('kPay').textContent = isFinite(m.payback) ? Math.ceil(m.payback) : '—';
+      $('kPayS').textContent = isFinite(m.payback)
+        ? (Math.ceil(m.payback) > m.months ? 'months — longer than the term' : 'months')
+        : 'not at these numbers';
+      $('k4L').textContent = 'Cash needed to start';
+      $('kCash').textContent = R(m.upfront);
+      $('kCashS').textContent = 'the full purchase price';
+      $('roiLabel').textContent = 'Return on investment';
+      $('roiVal').textContent = m.upfront > 0 ? pct(m.roi) : '—';
+      $('roiSub').textContent = 'over ' + state.term + ' years, on the ' + R(m.upfront) + ' you put in';
+    } else {
+      $('k1L').textContent = 'Cost per bike a week';
+      $('kMonthly').textContent = R(m.costWk);
+      $('kMonthlyS').textContent = 'HeroCare, energy and instalment';
+      $('k2L').textContent = 'Cost per bike a month';
+      $('kRor').textContent = R(m.costWk * 4.345);
+      $('k2S').textContent = 'the same figure monthly';
+      $('k3L').textContent = 'Fleet cost a month';
+      $('kPay').textContent = R(m.costM);
+      $('kPayS').textContent = 'across ' + state.bikes + (state.bikes === 1 ? ' bike' : ' bikes');
+      $('k4L').textContent = 'Cash needed to start';
+      $('kCash').textContent = R(m.upfront);
+      $('kCashS').textContent = 'deposit and first instalment';
+      $('roiLabel').textContent = 'Total cost over ' + state.term + ' years';
+      $('roiVal').textContent = R(m.costTotal);
+      var vsP = m.costWk - m.petrolCostWk;
+      $('roiSub').textContent = state.bikes + (state.bikes === 1 ? ' bike, ' : ' bikes, ') +
+        'everything in — ' + (vsP === 0 ? 'level with a petrol bike'
+          : vsP < 0 ? R(Math.abs(vsP)) + ' a week per bike less than petrol'
+                    : R(vsP) + ' a week per bike more than petrol');
+    }
+
+    // one-year view uses the same instalment as the selected finance term
+    var y1 = SH.compute(rawInputs(), state.fund, state.term, 1);
+    if (onRent) {
+      $('l1a').textContent='Rent collected';   $('y1Rev').textContent  = R(y1.revM * y1.months);
+      $('l1b').textContent='Running costs';    $('y1Op').textContent   = '\u2212' + R(y1.opM * y1.months);
+      $('l1c').textContent='Finance';          $('y1Fin').textContent  = y1.finM ? '\u2212' + R(y1.commit) : '\u2014';
+      $('l1d').textContent='Less cash you put in'; $('y1Cap').textContent = '\u2212' + R(y1.upfront);
+      $('l1e').textContent='Profit on your cash';  $('y1Prof').textContent = R(y1.profit);
+      $('l1f').textContent='Return on investment'; $('y1Roi').textContent  = y1.upfront > 0 ? pct(y1.roi) : '\u2014';
+
+      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(m.revM * m.months);
+      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(m.opM * m.months);
+      $('l2c').textContent='Finance';          $('hzFin').textContent  = m.finM ? '\u2212' + R(m.commit) : '\u2014';
+      $('l2d').textContent='Less cash you put in'; $('hzCap').textContent = '\u2212' + R(m.upfront);
+      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(m.profit);
+      $('l2f').textContent='Instalments you commit to'; $('hzCom').textContent = m.commit ? R(m.commit) : '\u2014';
+      $('hzComRow').hidden = !m.commit;
+    } else {
+      var nb = state.bikes;
+      $('l1a').textContent='HeroCare';  $('y1Rev').textContent = R(y1.careWk * 4.345 * nb * 12);
+      $('l1b').textContent='Energy';    $('y1Op').textContent  = R(y1.fuelWk * 4.345 * nb * 12);
+      $('l1c').textContent='Instalments'; $('y1Fin').textContent = R(y1.commit);
+      $('l1d').textContent='Cash up front'; $('y1Cap').textContent = R(y1.upfront);
+      $('l1e').textContent='Total cost';    $('y1Prof').textContent = R(y1.costTotal);
+      $('l1f').textContent='Per bike a week'; $('y1Roi').textContent = R(y1.costWk);
+
+      $('l2a').textContent='HeroCare';  $('hzRev').textContent = R(m.careWk * 4.345 * nb * m.months);
+      $('l2b').textContent='Energy';    $('hzOp').textContent  = R(m.fuelWk * 4.345 * nb * m.months);
+      $('l2c').textContent='Instalments'; $('hzFin').textContent = R(m.commit);
+      $('l2d').textContent='Cash up front'; $('hzCap').textContent = R(m.upfront);
+      $('l2e').textContent='Total cost';    $('hzProf').textContent = R(m.costTotal);
+      $('l2f').textContent='Per bike a week'; $('hzCom').textContent = R(m.costWk);
+      $('hzComRow').hidden = false;
+    }
+    $('hzTitle').textContent = 'Over ' + state.term + ' years';
+
+    // petrol cost table
+    if (!onRent) {
+      var rows = [
+        ['HeroCare — maintenance, insurance, tracking, system', m.careWk, m.inputs.pService + m.inputs.pInsurance],
+        ['Admin fee', m.adminWk, 0],
+        ['Energy / fuel', m.fuelWk, m.petrolFuelWk],
+        ['Instalment', m.finWk, m.inputs.pFinance]
+      ];
+      var html = rows.map(function(r){
+        var d = r[1] - r[2];
+        return '<tr><td>' + r[0] + '</td><td class="num">' + R(r[1]) + '</td><td class="num">' + R(r[2]) +
+               '</td><td class="num" style="color:' + (d > 0 ? '#993C1D' : '#0F6E56') + '">' +
+               (d > 0 ? '+' : '') + R(d) + '</td></tr>';
+      }).join('');
+      var td = m.costWk - m.petrolCostWk;
+      html += '<tr class="on"><td><b>Total per bike per week</b></td><td class="num"><b>' + R(m.costWk) +
+              '</b></td><td class="num"><b>' + R(m.petrolCostWk) + '</b></td><td class="num"><b style="color:' +
+              (td > 0 ? '#993C1D' : '#0F6E56') + '">' + (td > 0 ? '+' : '') + R(td) + '</b></td></tr>';
+      $('costCmpBody').innerHTML = html;
+      $('costCmpNote').textContent = td > 0
+        ? 'On these figures ScootHero costs ' + R(td) + ' a week more per bike, or ' + R(td * 52 * state.bikes) +
+          ' a year across the fleet. What that buys is uptime, one bill, no workshop and no admin — set your own petrol figures above to test it.'
+        : 'On these figures ScootHero costs ' + R(Math.abs(td)) + ' a week less per bike, or ' +
+          R(Math.abs(td) * 52 * state.bikes) + ' a year across the fleet.';
+    }
+
+    // leverage warning
+    var lev = $('lev');
+    if(m.commit > 0){
+      lev.hidden = false;
+      lev.innerHTML = 'Leasing makes the percentage look big because you risk less of your own cash \u2014 but the instalment is due every month whether a bike is rented or not. Over ' +
+        state.term + ' years you commit to <b>' + R(m.commit) + '</b> in instalments, and need <b>' + R(m.finM) +
+        ' a month</b> of rent collected before you earn anything.';
+    } else { lev.hidden = true; }
+
+    // comparison
+    var map = { buy:'buy', oplease:'op', lto:'lto' };
+    $('cmpH').textContent = 'Profit over ' + state.term + ' yrs';
+    ['buy','oplease','lto'].forEach(function(f){
+      var c = model(f, state.term), k = map[f];
+      $('c-'+k+'-up').textContent = R(c.upfront);
+      if(f !== 'buy'){
+        $('c-'+k+'-i').textContent = R(c.finM);
+        $('c-'+k+'-c').textContent = c.commit ? R(c.commit) : '\u2014';
+      }
+      $('c-'+k+'-m').textContent = R(c.netM);
+      $('c-'+k+'-p').textContent = R(c.profit);
+      $('c-'+k+'-r').textContent = c.upfront > 0 ? pct(c.roi) : '\u2014';
+      if (f !== 'buy') {
+        var lbl = document.querySelector('#cmp tr[data-row="' + f + '"] td:first-child');
+        if (lbl) lbl.firstChild.nodeValue = SH.fundLabel(f, c.leaseRate);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#cmp tbody tr'), function(tr){
+      tr.classList.toggle('on', tr.getAttribute('data-row') === state.fund);
+    });
+    $('pillBuy').hidden = state.fund !== 'buy';
+    $('pillOp').hidden  = state.fund !== 'oplease';
+    $('pillLto').hidden = state.fund !== 'lto';
+
+    var buy = model('buy', state.term), op = model('oplease', state.term);
+    var mult = op.upfront > 0 ? Math.floor(buy.upfront/op.upfront) : 0;
+    $('cmpNote').textContent = mult > 1
+      ? 'The cash that buys ' + state.bikes + (state.bikes===1?' bike':' bikes') + ' outright would put roughly ' +
+        (mult*state.bikes) + ' bikes on the road on an operating lease \u2014 more total profit, but a bigger operation to run and an instalment due whether the bike is rented or not.'
+      : '';
+
+    // deposit hint
+    $('depHint').innerHTML = 'Collected by Paystack before the rider takes the bike. At this deposit, missed payments run at <b>' +
+      pct(m.bad) + '</b> of revenue.';
+    // proposal breakdown — outright only
+    $('extrasSec').classList.toggle('is-hidden', !m.onRent);
+    if (m.onRent) {
+      $('pdiEach').textContent = R(m.inputs.pdiPrice) + ' a bike';
+      $('boxEach').textContent = R(m.inputs.boxPrice) + ' a bike';
+      var nb2 = m.inputs.bikes, unit = nb2 === 1 ? ' bike' : ' bikes';
+      $('qBikesL').textContent = nb2 + unit + ' at ' + R(m.inputs.price);
+      $('qBikes').textContent  = R(m.bikeTotal);
+      $('qPdiL').textContent   = 'Pre-delivery inspection, ' + nb2 + unit;
+      $('qPdi').textContent    = R(m.pdiTotal);
+      $('qPdiRow').style.display = m.wantPdi ? '' : 'none';
+      $('qBoxL').textContent   = 'Delivery boxes fitted, ' + nb2 + unit;
+      $('qBox').textContent    = R(m.boxTotal);
+      $('qBoxRow').style.display = m.wantBoxes ? '' : 'none';
+      $('qGearRow').style.display = m.wantGear ? '' : 'none';
+      $('qTotal').textContent  = R(m.proposalTotal);
+    }
+
+    $('cmpUs').textContent = R(m.margWk);
+    $('cmpPetrol').textContent = R(m.petrolWk);
+
+    // the two lease models are a self-run fleet, not a rental book
+    var onRent = m.onRent;
+    $('depositField').style.display = onRent ? '' : 'none';
+    $('rateField').classList.toggle('is-hidden', onRent);
+    $('rentWrap').classList.toggle('is-hidden', !onRent);
+    $('kmWrap').style.opacity = onRent ? '.45' : '1';
+    $('keyFuel').style.display = m.fuelToBusiness ? '' : 'none';
+    $('battWrap').style.display = onRent ? '' : 'none';
+    $('flowLabel').textContent = onRent
+      ? "Where one bike's rent goes each week"
+      : "Where one bike's earnings go each week";
+    $('flowGrossLbl').textContent = onRent ? 'Rent charged: ' : 'Bike earns: ';
+    $('cmpUsSub').textContent = onRent
+      ? 'a week per bike. We build them, run the swap network, service them and give you the system.'
+      : 'a week per bike after HeroCare, energy and your instalment.';
+
+    // process chart
+    var i2 = inputs(), n2 = state.bikes;
+    $('p1d').textContent = {
+      buy:'Choose your fleet size and pay for the bikes outright. We deliver, register and hand them over ready to ride.',
+      oplease:'Choose your fleet size and take the bikes on an operating lease. We deliver, register and hand them over ready to ride.',
+      lto:'Choose your fleet size and take the bikes on lease to own. We deliver, register and hand them over ready to ride.'
+    }[state.fund];
+    $('p2val').innerHTML = R(i2.rental) + ' <small>weekly rent \u00b7 ' + R(i2.deposit) + ' deposit per rider</small>';
+    $('careNote').innerHTML = 'HeroCare is <b>' + R(m.careWk) + ' per bike per week</b>, flat whatever the size of your fleet. ' +
+      'It covers maintenance, insurance, tracking, recovery and the system you manage everything in. ' +
+      (onRent
+        ? 'Battery usage is charged to your driver at a ' + (i2.kmRate*100).toFixed(0) + 'c per km equivalent and never reaches your books.'
+        : 'On either lease the company is billed for energy at 62c per km \u2014 ' + R(m.fuelWk) + ' a bike a week at ' + i2.kmPerWeek + ' km.') +
+      ' An admin fee of ' + R(i2.adminMonthly) + ' a month per bike (' + R(m.adminWk) + ' a week) is included. All figures exclude VAT.';
+    $('p3val').innerHTML = n2 + ' <small>' + (n2 === 1 ? 'seat to fill' : 'seats to fill') + '</small>';
+    $('p4val').innerHTML = R(m.wkCollected) + ' <small>' + (onRent ? 'collected across your fleet' : 'earned across your fleet') + '</small>';
+    $('p4t').textContent = onRent ? 'Riders pay you' : 'Your bikes earn';
+    $('p4d').textContent = onRent
+      ? 'Paystack collects the rent up front, before the week starts. You hold their deposit against anything unpaid.'
+      : 'Your own drivers run the bikes. The lease bars sub-renting, so the fleet works for your operation rather than a rental book.';
+    $('p3t').textContent = onRent ? 'Put riders on the bikes' : 'Put your drivers on the bikes';
+    $('p3d').textContent = onRent
+      ? 'Take vetted riders from our marketplace, or bring your own. A filled seat is a bike earning.'
+      : 'Your drivers, your routes. Every bike standing still is a bike not earning.';
+    $('p5rate').textContent = R(m.careWk);
+    $('p5d').innerHTML = onRent
+      ? 'HeroCare covers maintenance, insurance, tracking, recovery and the system. Battery usage is billed to your driver at a ' +
+        (i2.kmRate * 100).toFixed(0) + 'c per km equivalent, so it never touches your margin.'
+      : 'HeroCare covers maintenance, insurance, tracking, recovery and the system. Energy is billed to you at 62c per km on the distance your bikes cover.';
+    $('p5val').innerHTML = '-' + R(m.wkService) + ' <small>' +
+      (m.fuelWk > 0 ? R(m.wkCare) + ' HeroCare + ' + R(m.wkFuel) + ' energy' : 'out of the money collected') + '</small>';
+    $('p6val').innerHTML = R(m.wkNet) +
+      ' <small id="p6sub">' + (m.finWk > 0
+        ? 'before your ' + R(m.finWk * n2) + ' weekly finance share'
+        : 'yours, every week') + '</small>';
+    $('procTerm').textContent = state.term + ' years';
+    $('procWeeks').textContent = Math.round(state.term * 52) + ' weeks';
+
+    if(window.parent !== window){
+      window.parent.postMessage({ type:'setHeight', height: document.body.scrollHeight + 24 }, '*');
+    }
+  }
+
+  $('minus').addEventListener('click', function(){ $('bikes').value = Math.max(1, state.bikes-1); sync(); });
+  $('plus').addEventListener('click', function(){ $('bikes').value = Math.min(50, state.bikes+1); sync(); });
+  $('bikes').addEventListener('input', sync);
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fund]'), function(b){
+    b.addEventListener('click', function(){
+      state.fund = b.getAttribute('data-fund');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-fund]'), function(x){
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      $('fundHint').textContent = {
+        buy:'You own the bikes from day one.',
+        oplease:'Lowest cash to start. You hand the bikes back at the end of the term.',
+        lto:'You pay it off over the term and own the bikes at the end.'
+      }[state.fund];
+      $('depWrap').style.opacity = state.fund === 'buy' ? '.45' : '1';
+      render();
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-term]'), function(b){
+    b.addEventListener('click', function(){
+      state.term = parseInt(b.getAttribute('data-term'),10);
+      Array.prototype.forEach.call(document.querySelectorAll('[data-term]'), function(x){
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      render();
+    });
+  });
+
+  ['optPdi','optBox','optGear'].forEach(function(id){
+    $(id).addEventListener('change', render);
+  });
+
+  ['rental','herocare','herocarelease','kmweek','kmrate','price','util','dep','deposit',
+   'pfinance','pfuelkm','pservice','pinsurance','leaserate','adminfee'].forEach(function(id){
+    $(id).addEventListener('input', render);
+  });
+
+  function sync(){
+    var v = parseInt($('bikes').value,10);
+    state.bikes = isFinite(v) && v > 0 ? Math.min(v,50) : 1;
+    render();
+  }
+
+  // ---- capture ----
+  var API = (window.SH_API || '');   // same origin — served by this service
+  function msg(text, kind){
+    var el = $('capMsg');
+    el.textContent = text;
+    el.className = 'cap-msg ' + kind;
+  }
+  function mark(id, bad){ $(id).setAttribute('aria-invalid', bad ? 'true' : 'false'); }
+
+  $('capSend').addEventListener('click', function(){
+    var email = $('cEmail').value.trim();
+    var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    mark('cEmail', !okEmail);
+    if(!okEmail){ msg('Please enter a valid email address.', 'bad'); $('cEmail').focus(); return; }
+    if(!$('cConsent').checked){ msg('Please tick the box so we may email and store this.', 'bad'); return; }
+
+    var btn = this;
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Sending…';
+    msg('Building your PDF…', 'ok');
+
+    fetch(API + '/api/calculation', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contact:{ name:$('cName').value, email:email, company:$('cCompany').value, phone:$('cPhone').value },
+        inputs: rawInputs(),
+        consent: true,
+        website: $('cWebsite').value,
+        source: location.href
+      })
+    })
+    .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, body:j }; }); })
+    .then(function(r){
+      if(r.ok && r.body.ok){
+        msg('Sent. Your proposal is on its way to ' + email + ' — reference ' + (r.body.reference || '') + '. Sign the last page and send it back when you are ready.', 'ok');
+        btn.textContent = 'Sent';
+      } else {
+        msg((r.body && r.body.error) || 'We could not send that. Please try again.', 'bad');
+        btn.disabled = false; btn.textContent = original;
+      }
+    })
+    .catch(function(){
+      msg('No connection. Please check your network and try again.', 'bad');
+      btn.disabled = false; btn.textContent = original;
+    });
+  });
+
+  $('capDownload').addEventListener('click', function(){
+    var btn = this, original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Preparing…';
+    fetch(API + '/api/preview.pdf', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ inputs: rawInputs() })
+    })
+    .then(function(r){ if(!r.ok) throw new Error(); return r.blob(); })
+    .then(function(blob){
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'ScootHero-fleet-returns.pdf';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      msg('Downloaded. Nothing was stored or sent.', 'ok');
+    })
+    .catch(function(){ msg('Could not build the PDF just now. Please try again.', 'bad'); })
+    .finally(function(){ btn.disabled = false; btn.textContent = original; });
+  });
+
+  $('depWrap').style.opacity = '.45';
+  drawRisks();
+  render();
+  window.addEventListener('load', render);
+})();
+</script>
+</body>
+</html>

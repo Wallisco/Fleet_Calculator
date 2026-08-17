@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace — ScootHero</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="description" content="Fleet management system and driver marketplace.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+<header>
+  <nav class="wrap">
+    <a class="logo" href="index.html" aria-label="ScootHero"><img src="assets/logo-navy.png" alt="ScootHero" width="150" height="14"></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="who-its-for.html">Who it's for</a>
+      <a href="vehicles.html">Vehicles</a>
+      <details class="nav-drop active">
+        <summary>Software</summary>
+        <div class="nav-drop-menu">
+          <a href="marketplace.html#fleetmgmt">Fleet management</a>
+          <a href="marketplace.html#marketplace">Driver marketplace<span class="beta-mini">Beta</span></a>
+        </div>
+      </details>
+      <a href="marketplace.html#fleetmgmt" class="nav-soft-mobile">Fleet mgmt</a>
+      <a href="marketplace.html#marketplace" class="nav-soft-mobile">Driver marketplace</a>
+      <a href="financing.html">Financing</a>
+      <a href="calculators.html">Calculators</a>
+      <a href="coverage.html">Coverage</a>
+      <a href="resources.html">Resources</a>
+      <a href="about.html">About us</a>
+    </div>
+    <div class="nav-cta">
+      <a href="demo.html" class="btn btn-primary btn-sm">Get a fleet demo</a>
+    </div>
+  </nav>
+</header>
+<section class="page-hero"><div class="wrap"><div class="eyebrow">ScootHero</div><h1>The platform</h1><p>Two halves: the system that manages the vehicles, and the marketplace that keeps them ridden.</p></div></section>
+<section id="fleetmgmt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The system</div>
+      <h2>Fleet management, built into every bike</h2>
+      <p>This is the platform we run our own vehicles on &mdash; every Motov3 and ScootV3 ships IoT-connected, so your fleet is visible, serviced and accountable from day one.</p>
+    </div>
+    <div class="fm-grid">
+      <div class="fm-card"><h4>Live vehicle tracking</h4><p>GPS position, trip history and utilisation per bike &mdash; know where every vehicle is and how hard it's working.</p></div>
+      <div class="fm-card"><h4>Battery &amp; swap monitoring</h4><p>Charge state and swap events per battery, so range surprises and dead bikes don't happen.</p></div>
+      <div class="fm-card"><h4>Preventative maintenance</h4><p>Service scheduling driven by real usage, not guesswork &mdash; with HeroCare support behind it.</p></div>
+      <div class="fm-card"><h4>Anti-theft &amp; alerts</h4><p>GPS anti-theft with transaction alarms and geofenced zone alerts on every vehicle.</p></div>
+      <div class="fm-card"><h4>Over-the-air updates</h4><p>Firmware and configuration updates pushed remotely &mdash; the fleet improves without a workshop visit.</p></div>
+      <div class="fm-card"><h4>Cost &amp; utilisation dashboards</h4><p>Cost per kilometre, uptime and utilisation per vehicle and per driver &mdash; the numbers your CFO actually asks for.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section-navy" id="marketplace">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow on-dark">The driver marketplace</div>
+      <h2>One pool of vetted drivers. Every fleet type pulls a different lever from it.<span class="beta-pill">Beta</span></h2>
+      <p>Africa's motorcycle delivery labour market is already enormous — the International Labour Organization estimates over 10 million people work in informal motorcycle-based transport and delivery across Sub-Saharan Africa. The hard part was never finding drivers. It's matching the right one to the right zone at the right moment. That's what the ScootHero marketplace does.</p>
+      <p class="mp-source">Source: <a href="https://www.marketdataforecast.com/market-reports/africa-motorcycle-market" target="_blank" rel="noopener">Market Data Forecast, Africa Motorcycle Market ↗</a></p>
+    </div>
+
+    <div class="icp-benefit-row" id="mpIcpRow">
+      <div class="icp-benefit-chip"><div class="k">Corporate</div><p>Overflow capacity on demand — no payroll spike to cover a busy Friday.</p></div>
+      <div class="icp-benefit-chip"><div class="k">Rental operator</div><p>Idle bikes fill with vetted drivers in minutes, not days.</p></div>
+      <div class="icp-benefit-chip"><div class="k">Self-run fleet</div><p>Recruitment, vetting and scheduling collapse into one dashboard.</p></div>
+    </div>
+
+    <!-- feature: nudging -->
+    <div class="mp-feature">
+      <div>
+        <div class="kicker">Feature 01 · Nudging</div>
+        <h3>Nudging keeps drivers where the orders already are</h3>
+        <p>Before a zone gets busy, the marketplace nudges nearby drivers toward it with a small, visible earnings incentive — the same mechanic that lets platforms cut driver downtime by reducing wait time between jobs. Less deadhead distance, more paid minutes per hour, and drivers stay inside the delivery radius fleet operators actually need covered.</p>
+        <p class="mp-source">Reducing the gap between rides is core to how modern dispatch platforms lift driver earning time — see Uber's own account of how proximity-aware matching increases business for drivers: <a href="https://www.uber.com/us/en/marketplace/matching/" target="_blank" rel="noopener">Uber, Marketplace Matching ↗</a></p>
+      </div>
+      <div class="mp-visual">
+        <div class="eyebrow on-dark" style="margin-bottom:2px;">Driver view</div>
+        <div class="row"><span>Zone: Milnerton North</span><span class="v amber">+R18 nudge active</span></div>
+        <div class="row"><span>Orders waiting nearby</span><span class="v">6</span></div>
+        <div class="row"><span>Est. earnings this hour</span><span class="v">R142</span></div>
+      </div>
+    </div>
+
+    <!-- feature: demand planning -->
+    <div class="mp-feature reverse">
+      <div>
+        <div class="kicker">Feature 02 · Demand planning</div>
+        <h3>Demand planning ends the guesswork of how many drivers to call up</h3>
+        <p>The marketplace forecasts order volume by zone and hour, then tells fleet managers exactly how many drivers to schedule — before the queue builds, not after. That solves the two costliest states in delivery ops at once: idle bikes burning fixed cost, and missed SLAs from being short-staffed at 5pm.</p>
+        <p class="mp-source">Academic work on gig marketplaces shows financial incentives calibrated to real-time demand can lift service capacity meaningfully without added cost — the same principle behind ScootHero's demand planning. <a href="https://mackinstitute.wharton.upenn.edu/wp-content/uploads/2020/11/FP0438_WP_2019Oct.pdf" target="_blank" rel="noopener">Wharton, Behavioral &amp; Economic Drivers of Gig Workers ↗</a></p>
+      </div>
+      <div class="mp-visual">
+        <div class="eyebrow on-dark" style="margin-bottom:2px;">Fleet manager view</div>
+        <div class="row"><span>Forecast: 16:00–19:00</span><span class="v amber">Peak</span></div>
+        <div class="row"><span>Drivers needed</span><span class="v">22</span></div>
+        <div class="row"><span>Drivers confirmed</span><span class="v">19 / 22</span></div>
+      </div>
+    </div>
+
+    <!-- feature: finding drivers -->
+    <div class="mp-feature">
+      <div>
+        <div class="kicker">Feature 03 · Sourcing</div>
+        <h3>Finding drivers becomes a post-and-fill, not a recruitment drive</h3>
+        <p>Post a shift or a zone and the marketplace matches it against a live, vetted driver pool — no job ads, no walk-in interviews, no dead time between "we need a driver" and "a driver is riding." For rental operators this means an idle bike gets a renter fast; for fleets it means peak season doesn't require a hiring sprint.</p>
+        <p class="mp-source">South Africa's e-commerce and parcel volumes are climbing fast enough that fleet operators are expanding capacity continuously — the bottleneck is matching supply to that growth, not a shortage of would-be riders. <a href="https://www.businessmarketinsights.com/reports/africa-last-mile-delivery-market" target="_blank" rel="noopener">Business Market Insights, Africa Last-Mile Delivery Market ↗</a></p>
+      </div>
+      <div class="mp-visual">
+        <div class="eyebrow on-dark" style="margin-bottom:2px;">Post a shift</div>
+        <div class="row"><span>Zone</span><span class="v">Blaauwberg / Table View</span></div>
+        <div class="row"><span>Matched drivers</span><span class="v">8 available now</span></div>
+        <div class="row"><span>Time to fill</span><span class="v">&lt; 4 min</span></div>
+      </div>
+    </div>
+
+    <!-- feature: admin -->
+    <div class="mp-feature reverse">
+      <div>
+        <div class="kicker">Feature 04 · Admin &amp; compliance</div>
+        <h3>Paperwork stops being a full-time job for your fleet manager</h3>
+        <p>Licences, PrDP status, roadworthy checks and POPIA-compliant driver contracts live in one place, with automatic expiry reminders before a document — or a driver — quietly goes non-compliant. Onboarding a new driver is a digital form, not a folder.</p>
+        <p class="mp-source">Fleet operators consistently report that scheduled, software-driven maintenance and admin cut administrative burden dramatically compared to running it manually across a spread-out delivery fleet. <a href="https://www.zawya.com/en/economy/africa/meeting-e-commerce-demands-the-future-of-last-mile-delivery-in-south-africa-l2bant85" target="_blank" rel="noopener">Zawya, Future of Last-Mile Delivery in SA ↗</a></p>
+      </div>
+      <div class="mp-visual">
+        <div class="eyebrow on-dark" style="margin-bottom:2px;">Compliance dashboard</div>
+        <div class="row"><span>PrDP renewals due in 30 days</span><span class="v amber">3</span></div>
+        <div class="row"><span>Contracts fully digital</span><span class="v">100%</span></div>
+        <div class="row"><span>Roadworthy checks overdue</span><span class="v">0</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="cta-strip">
+  <div class="wrap">
+    <h2>Ready to see it on your routes?</h2>
+    <p>Book a fleet assessment &mdash; we map your zones against live coverage and put your savings in writing.</p>
+    <a href="demo.html" class="btn btn-primary">Get a fleet demo</a>
+  </div>
+</section>
+<footer class="section-navy">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="#top"><img src="assets/logo-white.png" alt="ScootHero" width="150" height="14"></a>
+        <p style="max-width:32ch;">Southern Africa's EV two-wheeler and driver marketplace infrastructure for last-mile delivery fleets.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="who-its-for.html">Who it's for</a></li>
+          <li><a href="calculators.html">Calculators</a></li>
+          <li><a href="coverage.html">Coverage</a></li>
+          <li><a href="financing.html">Financing</a></li>
+          <li><a href="resources.html">Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Get in touch</h5>
+        <ul>
+          <li>Blaauwberg Business Park, Potsdam Road, Milnerton, Cape Town</li>
+          <li>Unit 71 Inospace Allandale Exchange, Midrand, Johannesburg</li>
+          <li>+27 87 147-8147</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
+          <li><a href="https://www.scoothero.co.za/terms-of-service" target="_blank" rel="noopener">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ScootHero. All rights reserved.</span>
+      <span>Built for A/B testing — variant assignment is sticky per visitor.</span>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/27871478147" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
+<script>
+/* Smooth in-page navigation — standalone so it can never be taken down by other scripts.
+   Capture-phase on window so it beats any environment-level link interceptors (e.g. sandboxed previews). */
+window.addEventListener('click', function(e){
+  try{
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href');
+
+    /* Same-page anchors: smooth scroll, cancel navigation */
+    if (href.charAt(0) === '#'){
+      var id = href.slice(1);
+      var target = id ? document.getElementById(id) : null;
+      if (!target && (id === 'top' || id === '')) target = document.body;
+      if (!target) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+
+    /* Cross-page links (e.g. about.html, index.html#lead): in an embedded preview these
+       cannot resolve, so show a notice instead of a broken navigation. On the live site
+       (top-level window) they navigate normally. */
+    var isRelativePage = href.indexOf('://') === -1 && href.indexOf('mailto:') !== 0 && href.indexOf('tel:') !== 0;
+    var isEmbedded = false;
+    try{ isEmbedded = window.self !== window.top; }catch(err){ isEmbedded = true; }
+    if (isRelativePage && isEmbedded){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var note = document.getElementById('previewNote');
+      if (!note){
+        note = document.createElement('div');
+        note.id = 'previewNote';
+        note.style.cssText = 'position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#0A0F23;color:#fff;font-family:Lexend,sans-serif;font-size:13.5px;padding:12px 20px;border-radius:10px;z-index:9999;box-shadow:0 12px 30px rgba(10,15,35,.35);max-width:92vw;text-align:center;';
+        document.body.appendChild(note);
+      }
+      note.textContent = 'This opens ' + href.split('#')[0] + ' \u2014 page-to-page links work on the deployed site, not in this preview.';
+      note.style.display = 'block';
+      clearTimeout(window.__pnTimer);
+      window.__pnTimer = setTimeout(function(){ note.style.display = 'none'; }, 3500);
+    }
+  }catch(err){ /* never block the click entirely */ }
+}, true);
+/* Close the Software dropdown when clicking anywhere else */
+document.addEventListener('click', function(e){
+  document.querySelectorAll('details.nav-drop[open]').forEach(function(d){
+    if (!d.contains(e.target)) d.removeAttribute('open');
+  });
+});
+</script>
+</body>
+</html>

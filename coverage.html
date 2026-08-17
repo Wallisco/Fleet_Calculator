@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coverage — ScootHero</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="description" content="Check ScootHero swap coverage at your address.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" defer></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+<header>
+  <nav class="wrap">
+    <a class="logo" href="index.html" aria-label="ScootHero"><img src="assets/logo-navy.png" alt="ScootHero" width="150" height="14"></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="who-its-for.html">Who it's for</a>
+      <a href="vehicles.html">Vehicles</a>
+      <details class="nav-drop">
+        <summary>Software</summary>
+        <div class="nav-drop-menu">
+          <a href="marketplace.html#fleetmgmt">Fleet management</a>
+          <a href="marketplace.html#marketplace">Driver marketplace<span class="beta-mini">Beta</span></a>
+        </div>
+      </details>
+      <a href="marketplace.html#fleetmgmt" class="nav-soft-mobile">Fleet mgmt</a>
+      <a href="marketplace.html#marketplace" class="nav-soft-mobile">Driver marketplace</a>
+      <a href="financing.html">Financing</a>
+      <a href="calculators.html">Calculators</a>
+      <a href="coverage.html" class="active">Coverage</a>
+      <a href="resources.html">Resources</a>
+      <a href="about.html">About us</a>
+    </div>
+    <div class="nav-cta">
+      <a href="demo.html" class="btn btn-primary btn-sm">Get a fleet demo</a>
+    </div>
+  </nav>
+</header>
+<section class="page-hero"><div class="wrap"><div class="eyebrow">ScootHero</div><h1>Coverage checker</h1><p>Type your address and get an instant answer — live coverage or the phase it arrives.</p></div></section>
+<section class="section-solar" id="coverage">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Real infrastructure, on a real map</div>
+      <h2>Where the swap network already runs — and where it lands next</h2>
+      <p>Live delivery zones and battery swap coverage across South Africa, with the phased rollout through December 2026. Check your fleet's zones before you even talk to us.</p>
+    </div>
+    <div class="cov-checker">
+      <div class="cov-search">
+        <input id="covInput" type="text" placeholder="Enter your business address or suburb, e.g. Montague Gardens, Cape Town" aria-label="Address to check coverage">
+        <button class="btn btn-primary" id="covBtn">Check coverage</button>
+      </div>
+      <div id="covMap"></div>
+      <div class="cov-verdict" id="covVerdict">
+        <span class="dot" id="covDot"></span>
+        <div class="v-text"><strong id="covTitle"></strong><span id="covSub"></span></div>
+        <a href="demo.html" class="btn btn-primary" id="covCta" style="flex:0 0 auto;">Get a fleet demo</a>
+      </div>
+      <div class="cov-hint">Verdicts are based on distance to the nearest swap station (live or planned). Exact route coverage is confirmed in your fleet assessment.</div>
+    </div>
+    <div class="map-legend">
+      <span><i style="background:#33C97A;"></i> Live swap coverage</span>
+      <span><i style="background:#F4B8C9;"></i> Phase 1 — end Jul 2026</span>
+      <span><i style="background:#F26700;"></i> Phase 2 — Sep 2026</span>
+      <span><i style="background:#0A0F23;"></i> Phase 3 — Dec 2026</span>
+    </div>
+  </div>
+</section>
+<section class="cta-strip">
+  <div class="wrap">
+    <h2>Ready to see it on your routes?</h2>
+    <p>Book a fleet assessment &mdash; we map your zones against live coverage and put your savings in writing.</p>
+    <a href="demo.html" class="btn btn-primary">Get a fleet demo</a>
+  </div>
+</section>
+<footer class="section-navy">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="#top"><img src="assets/logo-white.png" alt="ScootHero" width="150" height="14"></a>
+        <p style="max-width:32ch;">Southern Africa's EV two-wheeler and driver marketplace infrastructure for last-mile delivery fleets.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="who-its-for.html">Who it's for</a></li>
+          <li><a href="calculators.html">Calculators</a></li>
+          <li><a href="coverage.html">Coverage</a></li>
+          <li><a href="financing.html">Financing</a></li>
+          <li><a href="resources.html">Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Get in touch</h5>
+        <ul>
+          <li>Blaauwberg Business Park, Potsdam Road, Milnerton, Cape Town</li>
+          <li>Unit 71 Inospace Allandale Exchange, Midrand, Johannesburg</li>
+          <li>+27 87 147-8147</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
+          <li><a href="https://www.scoothero.co.za/terms-of-service" target="_blank" rel="noopener">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ScootHero. All rights reserved.</span>
+      <span>Built for A/B testing — variant assignment is sticky per visitor.</span>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/27871478147" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
+<script>
+(function(){
+/* ---------- COVERAGE CHECKER (Openserve-style: address in, verdict out) ---------- */
+  /* STATION DATA — PLACEHOLDER entries below. Replace with the real swap station list
+     (name, lat, lng, phase) exported from the zone map. phase: "live" | "p1" | "p2" | "p3" */
+  var SWAP_STATIONS = [
+    {name:"Montague Gardens",   lat:-33.8720, lng:18.5240, phase:"live"},
+    {name:"Cape Town CBD",      lat:-33.9249, lng:18.4241, phase:"live"},
+    {name:"Bellville",          lat:-33.9036, lng:18.6294, phase:"p1"},
+    {name:"Claremont",          lat:-33.9820, lng:18.4640, phase:"p1"},
+    {name:"Sandton",            lat:-26.1076, lng:28.0567, phase:"p2"},
+    {name:"Randburg",           lat:-26.0936, lng:27.9931, phase:"p2"},
+    {name:"Durban Central",     lat:-29.8587, lng:31.0218, phase:"p3"}
+  ];
+  var COVERAGE_KM = 5; /* driver coverage rule: within 5 km of a station */
+  var PHASE_META = {
+    live:{label:"Live swap coverage", sub:"Your fleet can run here today.", color:"#33C97A", cta:"Get a fleet demo"},
+    p1:{label:"Phase 1 — live end July 2026", sub:"Onboard now for priority access when the zone opens.", color:"#F4B8C9", cta:"Reserve Phase 1 access"},
+    p2:{label:"Phase 2 — September 2026", sub:"Coverage lands here in the next rollout wave.", color:"#F26700", cta:"Register interest"},
+    p3:{label:"Phase 3 — December 2026", sub:"On the roadmap for the December expansion.", color:"#0A0F23", cta:"Register interest"},
+    none:{label:"Not in a mapped zone yet", sub:"Tell us your routes — new zones are prioritised by fleet demand.", color:"#5A5F6E", cta:"Tell us your zones"}
+  };
+
+  var covMap = null, covMarker = null;
+  function initCovMap(){
+    if (covMap || !window.L) return;
+    covMap = L.map('covMap', {scrollWheelZoom:false}).setView([-30.5, 24.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(covMap);
+    SWAP_STATIONS.forEach(function(st){
+      var c = PHASE_META[st.phase].color;
+      L.circle([st.lat, st.lng], {radius: COVERAGE_KM*1000, color:c, weight:1.5, fillColor:c, fillOpacity:.18}).addTo(covMap);
+      L.circleMarker([st.lat, st.lng], {radius:6, color:c, weight:2, fillColor:'#fff', fillOpacity:1})
+        .addTo(covMap).bindPopup('<strong>'+st.name+'</strong><br>'+PHASE_META[st.phase].label);
+    });
+  }
+
+  function haversineKm(a, b){
+    var R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
+    var h = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return 2*R*Math.asin(Math.sqrt(h));
+  }
+
+  function showVerdict(phaseKey, nearestName, distKm){
+    var m = PHASE_META[phaseKey];
+    document.getElementById('covDot').style.background = m.color;
+    document.getElementById('covTitle').textContent = m.label;
+    document.getElementById('covSub').textContent = (nearestName ? ('Nearest station: ' + nearestName + ' (' + distKm.toFixed(1) + ' km away). ') : '') + m.sub;
+    document.getElementById('covCta').textContent = m.cta;
+    document.getElementById('covVerdict').classList.add('show');
+  }
+
+  function checkCoverage(){
+    var q = document.getElementById('covInput').value.trim();
+    if (!q) return;
+    var btn = document.getElementById('covBtn');
+    btn.textContent = 'Checking\u2026'; btn.disabled = true;
+    /* Free OpenStreetMap geocoding, biased to South Africa */
+    fetch('https://nominatim.openstreetmap.org/search?format=json&countrycodes=za&limit=1&q=' + encodeURIComponent(q))
+      .then(function(r){ return r.json(); })
+      .then(function(results){
+        btn.textContent = 'Check coverage'; btn.disabled = false;
+        if (!results || !results.length){
+          showVerdict('none', null, 0);
+          document.getElementById('covTitle').textContent = "We couldn't find that address";
+          document.getElementById('covSub').textContent = 'Try a suburb and city, e.g. "Bellville, Cape Town" \u2014 or tell us your zones directly.';
+          return;
+        }
+        var loc = {lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon)};
+        initCovMap();
+        if (covMarker) covMap.removeLayer(covMarker);
+        covMarker = L.marker([loc.lat, loc.lng]).addTo(covMap);
+        covMap.setView([loc.lat, loc.lng], 12);
+        /* nearest station across all phases */
+        var best = null;
+        SWAP_STATIONS.forEach(function(st){
+          var d = haversineKm(loc, st);
+          if (!best || d < best.d) best = {st:st, d:d};
+        });
+        if (best && best.d <= COVERAGE_KM){
+          showVerdict(best.st.phase, best.st.name, best.d);
+        } else if (best && best.d <= COVERAGE_KM * 3){
+          /* near a zone but outside the 5km ring: show the phase as "nearby" */
+          showVerdict(best.st.phase, best.st.name, best.d);
+          document.getElementById('covTitle').textContent = 'Close \u2014 ' + PHASE_META[best.st.phase].label.toLowerCase() + ' is ' + best.d.toFixed(1) + ' km away';
+        } else {
+          showVerdict('none', best ? best.st.name : null, best ? best.d : 0);
+        }
+      })
+      .catch(function(){
+        btn.textContent = 'Check coverage'; btn.disabled = false;
+        showVerdict('none', null, 0);
+        document.getElementById('covTitle').textContent = 'Coverage check unavailable right now';
+        document.getElementById('covSub').textContent = 'Tell us your zones directly and we\u2019ll map them same day.';
+      });
+  }
+
+  (function(){
+    var wrap = document.getElementById('covMap');
+    if (!wrap) return;
+    document.getElementById('covBtn').addEventListener('click', checkCoverage);
+    document.getElementById('covInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') checkCoverage(); });
+    /* Lazy-init the map when the section nears the viewport */
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting){ initCovMap(); io.disconnect(); } });
+      }, {rootMargin:'400px'});
+      io.observe(wrap);
+    } else { initCovMap(); }
+  })();
+})();
+</script>
+<script>
+/* Smooth in-page navigation — standalone so it can never be taken down by other scripts.
+   Capture-phase on window so it beats any environment-level link interceptors (e.g. sandboxed previews). */
+window.addEventListener('click', function(e){
+  try{
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href');
+
+    /* Same-page anchors: smooth scroll, cancel navigation */
+    if (href.charAt(0) === '#'){
+      var id = href.slice(1);
+      var target = id ? document.getElementById(id) : null;
+      if (!target && (id === 'top' || id === '')) target = document.body;
+      if (!target) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+
+    /* Cross-page links (e.g. about.html, index.html#lead): in an embedded preview these
+       cannot resolve, so show a notice instead of a broken navigation. On the live site
+       (top-level window) they navigate normally. */
+    var isRelativePage = href.indexOf('://') === -1 && href.indexOf('mailto:') !== 0 && href.indexOf('tel:') !== 0;
+    var isEmbedded = false;
+    try{ isEmbedded = window.self !== window.top; }catch(err){ isEmbedded = true; }
+    if (isRelativePage && isEmbedded){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var note = document.getElementById('previewNote');
+      if (!note){
+        note = document.createElement('div');
+        note.id = 'previewNote';
+        note.style.cssText = 'position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#0A0F23;color:#fff;font-family:Lexend,sans-serif;font-size:13.5px;padding:12px 20px;border-radius:10px;z-index:9999;box-shadow:0 12px 30px rgba(10,15,35,.35);max-width:92vw;text-align:center;';
+        document.body.appendChild(note);
+      }
+      note.textContent = 'This opens ' + href.split('#')[0] + ' \u2014 page-to-page links work on the deployed site, not in this preview.';
+      note.style.display = 'block';
+      clearTimeout(window.__pnTimer);
+      window.__pnTimer = setTimeout(function(){ note.style.display = 'none'; }, 3500);
+    }
+  }catch(err){ /* never block the click entirely */ }
+}, true);
+/* Close the Software dropdown when clicking anywhere else */
+document.addEventListener('click', function(e){
+  document.querySelectorAll('details.nav-drop[open]').forEach(function(d){
+    if (!d.contains(e.target)) d.removeAttribute('open');
+  });
+});
+</script>
+</body>
+</html>
