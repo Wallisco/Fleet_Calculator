@@ -269,7 +269,6 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 
       <div class="field">
         <span class="flabel" id="fundLbl">How you pay for them</span>
-        <div class="fixed-fund">Bought outright</div>
         <div class="seg" role="group" aria-labelledby="fundLbl" hidden>
           <button type="button" data-fund="buy" aria-pressed="true">Buy outright</button>
           <button type="button" data-fund="oplease" aria-pressed="false">Operating lease</button>
@@ -281,8 +280,8 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       <div class="field">
         <span class="flabel" id="termLbl">Over how long</span>
         <div class="seg" role="group" aria-labelledby="termLbl">
+          <button type="button" data-term="1" aria-pressed="false">1 year</button>
           <button type="button" data-term="3" aria-pressed="true">3 years</button>
-          <button type="button" data-term="5" aria-pressed="false">5 years</button>
         </div>
         <p class="hint">Sets both the finance term and the return period below.</p>
       </div>
@@ -312,7 +311,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
         <div id="rentWrap"><span class="flabel" id="l1">Weekly rent per bike (R)</span><input id="rental" type="number" min="0" step="25" value="850" aria-labelledby="l1"></div>
         <div id="kmWrap"><span class="flabel" id="l8">Km per bike per week</span><input id="kmweek" type="number" min="0" max="3000" step="10" value="110" aria-labelledby="l8"><span class="adv-note">* leases only</span></div>
         <div><span class="flabel" id="l3">Bike price, excl VAT (R)</span><input id="price" type="number" min="0" step="500" value="35000" aria-labelledby="l3"></div>
-        <div><span class="flabel" id="l4">Weeks a bike is rented (%)</span><input id="util" type="number" min="10" max="100" step="1" value="92" aria-labelledby="l4"><span class="adv-note">* indicative</span></div>
+        <div><span class="flabel" id="l4">Driver occupancy rate p/week (%)</span><input id="util" type="number" min="10" max="100" step="1" value="92" aria-labelledby="l4"><span class="adv-note">* indicative</span></div>
         <div id="depWrap"><span class="flabel" id="l5">Deposit on either lease (%)</span><input id="dep" type="number" min="0" max="50" step="1" value="10" aria-labelledby="l5"></div>
         <div class="is-hidden"><span class="flabel" id="l12">Admin fee per bike a month (R)</span><input id="adminfee" type="number" min="0" step="5" value="50" aria-labelledby="l12"></div>
         <div class="is-hidden"><span class="flabel" id="l2">HeroCare, outright (R)</span><input id="herocare" type="number" min="0" step="5" value="465" aria-labelledby="l2"></div>
@@ -374,7 +373,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 
     <div class="kpis">
       <div class="kpi"><div class="k" id="k1L">Cash per month</div><div class="v" id="kMonthly">R0</div><div class="s" id="kMonthlyS">after every cost</div></div>
-      <div class="kpi"><div class="k" id="k2L">Return on revenue</div><div class="v" id="kRor">0%</div><div class="s" id="k2S">of every rand collected</div></div>
+      <div class="kpi"><div class="k" id="k2L">Margin</div><div class="v" id="kRor">0%</div><div class="s" id="k2S">of every rand collected</div></div>
       <div class="kpi"><div class="k" id="k3L">Money back in</div><div class="v" id="kPay">0</div><div class="s" id="kPayS">months</div></div>
       <div class="kpi"><div class="k" id="k4L">Cash needed to start</div><div class="v" id="kCash">R0</div><div class="s" id="kCashS">the full purchase price</div></div>
     </div>
@@ -601,7 +600,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 
 <style>
   /* outright build */
-  #fundLbl + .seg, #rateField, #petrolWrap, #costCmpSec,
+  #fundLbl, #fundLbl + .seg, #fundHint, #rateField, #petrolWrap, #costCmpSec,
   #s-fuel, #keyFuel, #kmWrap, #cmpSec { display:none !important; }
   .fixed-fund{display:inline-block;padding:10px 16px;border-radius:10px;background:var(--navy);
     color:#fff;font-family:'Lexend',sans-serif;font-size:12.5px;font-weight:500}
@@ -647,7 +646,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
     { r:'Your rider stops paying', f:'Rent is collected before the wheels turn. Paystack takes a card or debit-order payment up front each week, and you hold a deposit on top of it.', q:'A deposit worth two weeks\u2019 rent brings missed payments down to about 2% of revenue.' },
     { r:'A bike sits with no rider', f:'Our rider marketplace fills the seat, and refills it if someone leaves. Riders want these seats because Takealot volumes mean more deliveries and no petrol bill.', q:'Every empty week costs you the full rent \u2014 this is the number that matters most.' },
     { r:'A breakdown takes a bike off the road', f:'HeroCare covers maintenance, parts and labour on a fixed weekly fee, with a service turnaround commitment. Battery swaps take under two minutes at any HeroGo station.', q:'Repairs never arrive as a surprise bill.' },
-    { r:'A bike is crashed or stolen', f:'Insurance, tracking, SOS and recovery are all inside the HeroCare fee. Every bike is tracked from the day it is handed over.', q:'One uninsured write-off would wipe out a year of profit on that bike.' },
+    { r:'A bike is crashed or stolen', f:'Insurance, tracking, SOS and recovery are all inside the HeroCare fee. Every bike is tracked from the day it is handed over.', q:'You carry a R5 000 excess per claim. One uninsured write-off would cost a year of profit on that bike.' },
     { r:'There is no work for the bikes', f:'ScootHero is Takealot\u2019s preferred electric motorcycle provider. Demand comes with the fleet \u2014 you are not hunting for delivery work on your own.', q:'This is why the seats fill in the first place.' },
     { r:'You have never run a fleet', f:'This is the business in a box: bikes, swaps, maintenance, insurance, rider supply, payment collection and a named contact for your first 30 days.', q:'Your job is the seats. We handle the rest.' }
   ];
@@ -699,27 +698,28 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 
     // one-year view uses the same instalment as the selected finance term
     var y1 = SH.compute(rawInputs(), state.fund, state.term, 1);
+    var y3 = SH.compute(rawInputs(), state.fund, state.term, 3);
     if (onRent) {
       $('l1a').textContent='Rent collected';   $('y1Rev').textContent  = R(y1.revM * y1.months);
       $('l1b').textContent='Running costs';    $('y1Op').textContent   = '\u2212' + R(y1.opM * y1.months);
       $('l1c').textContent='Finance';          $('y1Fin').textContent  = y1.finM ? '\u2212' + R(y1.commit) : '\u2014';
-      $('l1d').textContent='Less cash you put in'; $('y1Cap').textContent = '\u2212' + R(y1.upfront);
+      $('l1d').textContent='Capital, 1 of ' + state.term + ' yrs'; $('y1Cap').textContent = '\u2212' + R(y1.capitalCharge);
       $('l1e').textContent='Profit on your cash';  $('y1Prof').textContent = R(y1.profit);
       $('l1f').textContent='Return on investment'; $('y1Roi').textContent  = y1.upfront > 0 ? pct(y1.roi) : '\u2014';
 
-      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(m.revM * m.months);
-      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(m.opM * m.months);
-      $('l2c').textContent='Finance';          $('hzFin').textContent  = m.finM ? '\u2212' + R(m.commit) : '\u2014';
-      $('l2d').textContent='Less cash you put in'; $('hzCap').textContent = '\u2212' + R(m.upfront);
-      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(m.profit);
-      $('l2f').textContent='Instalments you commit to'; $('hzCom').textContent = m.commit ? R(m.commit) : '\u2014';
-      $('hzComRow').hidden = !m.commit;
+      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(y3.revM * y3.months);
+      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(y3.opM * y3.months);
+      $('l2c').textContent='Finance';          $('hzFin').textContent  = y3.finM ? '\u2212' + R(y3.commit) : '\u2014';
+      $('l2d').textContent='Capital, over the term'; $('hzCap').textContent = '\u2212' + R(y3.capitalCharge);
+      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(y3.profit);
+      $('l2f').textContent='Return on investment'; $('hzCom').textContent = y3.capitalCharge > 0 ? pct(y3.roi) : '\u2014';
+      $('hzComRow').hidden = false;
     } else {
       var nb = state.bikes;
       $('l1a').textContent='HeroCare';  $('y1Rev').textContent = R(y1.careWk * 4.345 * nb * 12);
       $('l1b').textContent='Energy';    $('y1Op').textContent  = R(y1.fuelWk * 4.345 * nb * 12);
       $('l1c').textContent='Instalments'; $('y1Fin').textContent = R(y1.commit);
-      $('l1d').textContent='Cash up front'; $('y1Cap').textContent = R(y1.upfront);
+      $('l1d').textContent='Capital, 1 of ' + state.term + ' yrs'; $('y1Cap').textContent = R(y1.capitalCharge);
       $('l1e').textContent='Total cost';    $('y1Prof').textContent = R(y1.costTotal);
       $('l1f').textContent='Per bike a week'; $('y1Roi').textContent = R(y1.costWk);
 
@@ -731,7 +731,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       $('l2f').textContent='Per bike a week'; $('hzCom').textContent = R(m.costWk);
       $('hzComRow').hidden = false;
     }
-    $('hzTitle').textContent = 'Over ' + state.term + ' years';
+    $('hzTitle').textContent = 'Over 3 years';
 
     // petrol cost table
     if (!onRent) {
@@ -836,7 +836,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
     $('battWrap').style.display = onRent ? '' : 'none';
     $('compareWrap').style.display = onRent ? '' : 'none';
     $('costCmpSec').classList.toggle('is-hidden', onRent);
-    $('s-loss').style.display = onRent ? '' : 'none';
+    $('s-loss').style.display = (onRent && m.lossWk > 0.5) ? '' : 'none';
     $('s-marg').style.display = onRent ? '' : 'none';
 
     $('flowLabel').textContent = onRent
@@ -869,7 +869,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       $('k1L').textContent = 'Cash per month';
       $('kMonthly').textContent = R(m.netM);
       $('kMonthlyS').textContent = m.netM >= 0 ? 'after every cost' : 'shortfall — check your assumptions';
-      $('k2L').textContent = 'Return on revenue';
+      $('k2L').textContent = 'Margin';
       $('kRor').textContent = pct(m.ror);
       $('k2S').textContent = 'of every rand collected';
       $('k3L').textContent = 'Money back in';
@@ -882,7 +882,8 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       $('kCashS').textContent = 'the full purchase price';
       $('roiLabel').textContent = 'Return on investment';
       $('roiVal').textContent = m.upfront > 0 ? pct(m.roi) : '—';
-      $('roiSub').textContent = 'over ' + state.term + ' years, on the ' + R(m.upfront) + ' you put in';
+      $('roiSub').textContent = 'over ' + state.term + (state.term === 1 ? ' year, on ' : ' years, on ') +
+        R(m.capitalCharge) + ' of capital';
     } else {
       $('k1L').textContent = 'Cost per bike a week';
       $('kMonthly').textContent = R(m.costWk);
@@ -907,27 +908,28 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 
     // one-year view uses the same instalment as the selected finance term
     var y1 = SH.compute(rawInputs(), state.fund, state.term, 1);
+    var y3 = SH.compute(rawInputs(), state.fund, state.term, 3);
     if (onRent) {
       $('l1a').textContent='Rent collected';   $('y1Rev').textContent  = R(y1.revM * y1.months);
       $('l1b').textContent='Running costs';    $('y1Op').textContent   = '\u2212' + R(y1.opM * y1.months);
       $('l1c').textContent='Finance';          $('y1Fin').textContent  = y1.finM ? '\u2212' + R(y1.commit) : '\u2014';
-      $('l1d').textContent='Less cash you put in'; $('y1Cap').textContent = '\u2212' + R(y1.upfront);
+      $('l1d').textContent='Capital, 1 of ' + state.term + ' yrs'; $('y1Cap').textContent = '\u2212' + R(y1.capitalCharge);
       $('l1e').textContent='Profit on your cash';  $('y1Prof').textContent = R(y1.profit);
       $('l1f').textContent='Return on investment'; $('y1Roi').textContent  = y1.upfront > 0 ? pct(y1.roi) : '\u2014';
 
-      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(m.revM * m.months);
-      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(m.opM * m.months);
-      $('l2c').textContent='Finance';          $('hzFin').textContent  = m.finM ? '\u2212' + R(m.commit) : '\u2014';
-      $('l2d').textContent='Less cash you put in'; $('hzCap').textContent = '\u2212' + R(m.upfront);
-      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(m.profit);
-      $('l2f').textContent='Instalments you commit to'; $('hzCom').textContent = m.commit ? R(m.commit) : '\u2014';
-      $('hzComRow').hidden = !m.commit;
+      $('l2a').textContent='Rent collected';   $('hzRev').textContent  = R(y3.revM * y3.months);
+      $('l2b').textContent='Running costs';    $('hzOp').textContent   = '\u2212' + R(y3.opM * y3.months);
+      $('l2c').textContent='Finance';          $('hzFin').textContent  = y3.finM ? '\u2212' + R(y3.commit) : '\u2014';
+      $('l2d').textContent='Capital, over the term'; $('hzCap').textContent = '\u2212' + R(y3.capitalCharge);
+      $('l2e').textContent='Profit on your cash';  $('hzProf').textContent = R(y3.profit);
+      $('l2f').textContent='Return on investment'; $('hzCom').textContent = y3.capitalCharge > 0 ? pct(y3.roi) : '\u2014';
+      $('hzComRow').hidden = false;
     } else {
       var nb = state.bikes;
       $('l1a').textContent='HeroCare';  $('y1Rev').textContent = R(y1.careWk * 4.345 * nb * 12);
       $('l1b').textContent='Energy';    $('y1Op').textContent  = R(y1.fuelWk * 4.345 * nb * 12);
       $('l1c').textContent='Instalments'; $('y1Fin').textContent = R(y1.commit);
-      $('l1d').textContent='Cash up front'; $('y1Cap').textContent = R(y1.upfront);
+      $('l1d').textContent='Capital, 1 of ' + state.term + ' yrs'; $('y1Cap').textContent = R(y1.capitalCharge);
       $('l1e').textContent='Total cost';    $('y1Prof').textContent = R(y1.costTotal);
       $('l1f').textContent='Per bike a week'; $('y1Roi').textContent = R(y1.costWk);
 
@@ -939,7 +941,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       $('l2f').textContent='Per bike a week'; $('hzCom').textContent = R(m.costWk);
       $('hzComRow').hidden = false;
     }
-    $('hzTitle').textContent = 'Over ' + state.term + ' years';
+    $('hzTitle').textContent = 'Over 3 years';
 
     // petrol cost table
     if (!onRent) {
