@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work out what you keep — ScootHero</title>
+<meta name="description" content="Put in your own numbers and see what you earn, what the bike costs you, and what you would keep on electric.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A0F23; --navy-2:#141B36; --edge:#2A3354; --orange:#F26700; --orange-dk:#C85400;
+  --mint:#79F1A1; --leaf:#DFFBCB; --ink:#0A0F23; --muted:#5A5F73; --line:#E3E5EC;
+  --surface:#F4F5F7; --warn:#FAECE7; --warn-ink:#993C1D;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 48px}
+h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;margin:0}
+
+/* hero */
+.hero{background:var(--navy);color:#fff;padding:26px 0 30px;margin-bottom:26px}
+.hero .wrap{padding-bottom:0}
+.brand img{height:20px;display:block;margin-bottom:20px}
+.hero h1{font-size:clamp(28px,7vw,40px);line-height:1.1;color:#fff}
+.hero h1 em{font-style:normal;color:var(--mint)}
+.hero p{color:#9AA0B4;font-size:15px;margin:12px 0 0;max-width:46ch}
+
+/* steps to fill in */
+.card{border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+.card h2{font-size:17px;margin-bottom:4px}
+.card .sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+.q{margin-bottom:18px}
+.q:last-child{margin-bottom:0}
+.q label{display:block;font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;margin-bottom:3px}
+.q .help{font-size:12.5px;color:var(--muted);margin-bottom:9px}
+.inp{display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;transition:border-color .15s}
+.inp:focus-within{border-color:var(--orange)}
+.inp .pre{padding:0 2px 0 14px;font-family:'Lexend',sans-serif;font-size:20px;font-weight:600;color:var(--muted)}
+.inp input{flex:1;border:0;outline:0;font-family:'Lexend',sans-serif;font-size:22px;font-weight:600;color:var(--ink);padding:14px;width:100%;background:transparent;min-width:0}
+.inp .suf{padding:0 14px 0 2px;font-size:13px;color:var(--muted);white-space:nowrap}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1 1 auto;min-width:44px;padding:12px 6px;border:2px solid var(--line);background:#fff;border-radius:11px;
+  font-family:'Lexend',sans-serif;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* answer */
+.ans{background:var(--navy);color:#fff;border-radius:16px;padding:22px;margin:26px 0 16px}
+.ans h2{color:#fff;font-size:18px;margin-bottom:16px}
+.big{background:var(--orange);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.big .l{font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#fff;opacity:.92}
+.big .v{font-family:'Lexend',sans-serif;font-size:clamp(34px,9vw,46px);font-weight:700;line-height:1.05;color:#fff;margin-top:4px}
+.big .s{font-size:13px;color:#FFE9D8;margin-top:5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--navy-2);border:1px solid var(--edge);border-radius:12px;padding:14px 15px}
+.tile .l{font-family:'Lexend',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mint)}
+.tile .v{font-family:'Lexend',sans-serif;font-size:22px;font-weight:600;margin-top:5px}
+.tile .s{font-size:11.5px;color:#9AA0B4;margin-top:3px}
+
+/* side by side */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.col{border-radius:12px;padding:15px}
+.col.p{background:var(--navy-2);border:1px solid var(--edge)}
+.col.e{background:#123020;border:1px solid #1E5B3A}
+.col .h{font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:#fff;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.14)}
+.col .r{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:#B9C0D4;padding:3px 0}
+.col .r b{font-family:'Lexend',sans-serif;font-weight:500;color:#fff}
+.col .tot{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14)}
+.col .tot b{color:var(--mint);font-size:16px}
+
+.perjob{margin-top:16px;background:var(--navy-2);border:1px solid var(--edge);border-radius:12px;padding:15px}
+.perjob .h{font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin-bottom:10px}
+.perjob .r{display:flex;justify-content:space-between;font-size:13px;color:#C4C9DA;padding:4px 0}
+.perjob .r b{font-family:'Lexend',sans-serif;color:#fff;font-weight:500}
+
+/* cta */
+.cta{border:2px solid var(--orange);border-radius:16px;padding:22px;text-align:center;margin-top:8px}
+.cta h2{font-size:20px;margin-bottom:6px}
+.cta p{font-size:14px;color:var(--muted);margin:0 0 16px}
+.btn{background:var(--orange);color:#fff;border:0;border-radius:12px;padding:16px 28px;font-family:'Lexend',sans-serif;
+  font-size:16px;font-weight:600;cursor:pointer;width:100%;max-width:340px}
+.btn:hover{background:var(--orange-dk)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-ghost{background:transparent;border:2px solid var(--line);color:var(--ink);border-radius:12px;padding:13px 20px;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;width:100%;max-width:340px}
+
+.field{text-align:left;margin-bottom:12px}
+.field label{display:block;font-family:'Lexend',sans-serif;font-size:13px;font-weight:600;margin-bottom:6px}
+.field input{width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;font-family:'Poppins',sans-serif;font-size:16px}
+.field input:focus{outline:0;border-color:var(--orange)}
+.consent{display:flex;gap:10px;text-align:left;font-size:12.5px;color:var(--muted);margin:4px 0 16px;line-height:1.45}
+.consent input{width:20px;height:20px;accent-color:var(--orange);flex:0 0 auto;margin-top:1px}
+.msg{font-size:13.5px;margin-top:14px;padding:12px;border-radius:10px;display:none}
+.msg.ok{display:block;background:var(--leaf);color:#1E5B2A}
+.msg.bad{display:block;background:var(--warn);color:var(--warn-ink)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* qr */
+.qrbox{display:none;margin-top:18px;padding:20px;background:var(--surface);border-radius:14px;text-align:center}
+.qrbox.show{display:block}
+.qrbox h3{font-size:16px;margin-bottom:6px}
+.qrbox p{font-size:13px;color:var(--muted);margin:0 0 14px}
+.qrbox .qr{background:#fff;padding:12px;border-radius:12px;display:inline-block;line-height:0}
+.qrbox .qr svg{width:200px;height:200px;display:block}
+.qrbox .ref{font-family:'Lexend',sans-serif;font-size:13px;color:var(--ink);margin-top:12px}
+.qrbox a{display:inline-block;margin-top:10px;font-size:13px;color:var(--orange);word-break:break-all}
+
+.foot{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.6}
+@media (max-width:430px){ .two,.vs{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="brand"><img src="assets/logo-white.png" alt="ScootHero" width="150" height="20"></div>
+    <h1>Work out what you actually <em>keep</em>.</h1>
+    <p>Put in your own numbers. Takes a minute. We'll show you what you earn, what the bike costs you, and what you'd keep on electric.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="card">
+    <h2>Your work</h2>
+    <p class="sub">Roughly, on a normal day.</p>
+
+    <div class="q">
+      <label for="food">Food deliveries a day</label>
+      <div class="help">Restaurant orders — Roman's, KFC and the rest</div>
+      <div class="inp"><input id="food" type="number" min="0" max="200" step="1" value="9" inputmode="numeric"><span class="suf">jobs</span></div>
+    </div>
+
+    <div class="q">
+      <label for="express">Express parcels a day</label>
+      <div class="help">Courier parcels on your route</div>
+      <div class="inp"><input id="express" type="number" min="0" max="500" step="1" value="40" inputmode="numeric"><span class="suf">parcels</span></div>
+    </div>
+
+    <div class="q">
+      <label id="daysL">Days you work a week</label>
+      <div class="seg" role="group" aria-labelledby="daysL" id="daysSeg"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Your bike</h2>
+    <p class="sub">What it costs you now.</p>
+
+    <div class="q">
+      <label for="petrol">Petrol a day</label>
+      <div class="help">What you put in the tank on a working day</div>
+      <div class="inp"><span class="pre">R</span><input id="petrol" type="number" min="0" step="10" value="130" inputmode="numeric"></div>
+    </div>
+
+    <div class="q">
+      <label for="rent">Bike rental a week</label>
+      <div class="help">What you pay the owner. Put 0 if the bike is yours.</div>
+      <div class="inp"><span class="pre">R</span><input id="rent" type="number" min="0" step="50" value="700" inputmode="numeric"></div>
+    </div>
+
+    <div class="q">
+      <label for="maint">Repairs and tyres a week</label>
+      <div class="help">Punctures, services, brakes — your rough average</div>
+      <div class="inp"><span class="pre">R</span><input id="maint" type="number" min="0" step="50" value="250" inputmode="numeric"></div>
+    </div>
+  </section>
+
+  <section class="ans" aria-live="polite">
+    <h2 id="ansH">What you earn</h2>
+
+    <div class="big">
+      <div class="l">You earn a month</div>
+      <div class="v" id="earnMonth">R0</div>
+      <div class="s" id="earnSub">before what the bike costs you</div>
+    </div>
+
+    <div class="two">
+      <div class="tile"><div class="l">A week</div><div class="v" id="earnWeek">R0</div><div class="s" id="jobsWeek">0 jobs</div></div>
+      <div class="tile"><div class="l">You get paid</div><div class="v" id="perJob">R0</div><div class="s">a job, on your mix</div></div>
+    </div>
+
+    <div class="vs">
+      <div class="col p">
+        <div class="h">Petrol bike, a week</div>
+        <div class="r"><span>Petrol</span><b id="pFuel">R0</b></div>
+        <div class="r"><span>Repairs and tyres</span><b id="pMaint">R0</b></div>
+        <div class="r"><span>Bike rental</span><b id="pRent">R0</b></div>
+        <div class="r tot"><span>You keep</span><b id="pNet">R0</b></div>
+      </div>
+      <div class="col e">
+        <div class="h">Electric bike, a week</div>
+        <div class="r"><span>Charging</span><b id="eEnergy">R0</b></div>
+        <div class="r"><span>Repairs and tyres</span><b>Included</b></div>
+        <div class="r"><span>Bike rental</span><b id="eRent">R0</b></div>
+        <div class="r tot"><span>You keep</span><b id="eNet">R0</b></div>
+      </div>
+    </div>
+
+    <div class="perjob">
+      <div class="h">What each job costs you</div>
+      <div class="r"><span>On petrol</span><b id="pPerJob">R0</b></div>
+      <div class="r"><span>On electric</span><b id="ePerJob">R0</b></div>
+      <div class="r" style="padding-top:8px;margin-top:6px;border-top:1px solid var(--edge)"><span>You ride about</span><b id="kmWeek">0 km a week</b></div>
+    </div>
+
+    <div class="big" style="margin:16px 0 0;background:#0F6E56">
+      <div class="l">Extra in your pocket on electric</div>
+      <div class="v" id="saveMonth">R0</div>
+      <div class="s" id="saveSub">a month</div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Interested in an electric bike?</h2>
+    <p>Leave your details and we'll send you these numbers, plus a code to get started.</p>
+
+    <div class="field"><label for="dName">Your name</label><input id="dName" type="text" autocomplete="name" placeholder="Maick Kalume"></div>
+    <div class="field"><label for="dPhone">Mobile number</label><input id="dPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="082 000 0000"></div>
+    <div class="field"><label for="dEmail">Email address</label><input id="dEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@email.com"></div>
+    <div class="hp" aria-hidden="true"><label for="dWeb">Website</label><input id="dWeb" type="text" tabindex="-1" autocomplete="off"></div>
+
+    <label class="consent" for="dConsent">
+      <input type="checkbox" id="dConsent">
+      <span>Send me my numbers and keep my details so ScootHero can contact me about an electric bike. I can ask you to delete them any time.</span>
+    </label>
+
+    <button type="button" class="btn" id="go">Show me my code</button>
+    <button type="button" class="btn-ghost" id="skip">Just show me the code</button>
+    <p class="msg" id="msg" role="status"></p>
+
+    <div class="qrbox" id="qrbox">
+      <h3>Scan this to get started</h3>
+      <p>Open your camera and point it at the code. Your numbers come with you.</p>
+      <div class="qr" id="qr"></div>
+      <div class="ref" id="ref"></div>
+      <a href="#" id="portalLink" target="_blank" rel="noopener"></a>
+    </div>
+  </section>
+
+  <p class="foot">
+    Earnings use the average rates a working rider was paid over June and July 2026 — R58.05 a food delivery and R19.63 an express parcel. Your own rates may differ. Kilometres are worked out from what you spend on petrol, at 24 km a litre. On electric, the weekly rental covers maintenance, tyres, insurance and tracking; you pay only for charging at 62c a kilometre. Figures are estimates to help you compare, not an offer of work or credit.
+  </p>
+</div>
+
+<script src="model.js"></script>
+<script>
+(function () {
+  "use strict";
+  var SH = window.SHModel, R = SH.money, RC = SH.moneyC;
+  var $ = function (id) { return document.getElementById(id); };
+  var num = function (id, fb) { var v = parseFloat($(id).value); return isFinite(v) ? v : fb; };
+  var days = 5;
+
+  (function buildDays() {
+    $('daysSeg').innerHTML = [3,4,5,6,7].map(function (d) {
+      return '<button type="button" data-d="' + d + '" aria-pressed="' + (d === 5) + '">' + d + '</button>';
+    }).join('');
+    Array.prototype.forEach.call($('daysSeg').children, function (b) {
+      b.addEventListener('click', function () {
+        days = parseInt(b.getAttribute('data-d'), 10);
+        Array.prototype.forEach.call($('daysSeg').children, function (x) {
+          x.setAttribute('aria-pressed', String(x === b));
+        });
+        render();
+      });
+    });
+  })();
+
+  function raw() {
+    return {
+      foodJobs: num('food', 9), expressJobs: num('express', 40),
+      petrolPerDay: num('petrol', 130), petrolRent: num('rent', 700),
+      petrolMaintenanceWk: num('maint', 250), daysPerWeek: days
+    };
+  }
+
+  function render() {
+    var m = SH.computeDriver(raw());
+    $('earnMonth').textContent = R(m.earnMonth);
+    $('earnWeek').textContent  = R(m.earnWk);
+    $('jobsWeek').textContent  = Math.round(m.jobsWk) + ' jobs';
+    $('perJob').textContent    = RC(m.earnPerJob);
+
+    $('pFuel').textContent  = R(m.pFuelWk);
+    $('pMaint').textContent = R(m.pMaintWk);
+    $('pRent').textContent  = R(m.pRentWk);
+    $('pNet').textContent   = R(m.pNetWk);
+
+    $('eEnergy').textContent = R(m.eEnergyWk);
+    $('eRent').textContent   = R(m.eRentWk);
+    $('eNet').textContent    = R(m.eNetWk);
+
+    $('pPerJob').textContent = RC(m.pCostPerJob);
+    $('ePerJob').textContent = RC(m.eCostPerJob);
+    $('kmWeek').textContent  = Math.round(m.kmWk) + ' km a week';
+
+    if (m.betterOff) {
+      $('saveMonth').parentElement.style.background = '#0F6E56';
+      $('saveMonth').textContent = R(m.savingMonth);
+      $('saveSub').textContent = 'a month — that is ' + R(m.savingYear) + ' a year';
+    } else {
+      $('saveMonth').parentElement.style.background = '#7A3B1E';
+      $('saveMonth').textContent = R(Math.abs(m.savingMonth));
+      $('saveSub').textContent = 'a month more on electric at these numbers — talk to us';
+    }
+  }
+
+  ['food','express','petrol','rent','maint'].forEach(function (id) {
+    $(id).addEventListener('input', render);
+  });
+
+  // ---------- submit ----------
+  function showQR(data) {
+    $('qr').innerHTML = data.qr || '';
+    $('ref').textContent = data.reference ? 'Your code: ' + data.reference : '';
+    if (data.portalUrl) {
+      $('portalLink').href = data.portalUrl;
+      $('portalLink').textContent = 'Or tap here to open it';
+    }
+    $('qrbox').classList.add('show');
+    $('qrbox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function msg(t, k) { var e = $('msg'); e.textContent = t; e.className = 'msg ' + k; }
+
+  $('go').addEventListener('click', function () {
+    var email = $('dEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg('Please put in a valid email address.', 'bad'); $('dEmail').focus(); return; }
+    if (!$('dConsent').checked) { msg('Please tick the box so we can send your numbers.', 'bad'); return; }
+    var btn = this, orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Just a moment\u2026';
+    fetch((window.SH_API || '') + '/api/driver', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contact: { name: $('dName').value, email: email, phone: $('dPhone').value },
+        inputs: raw(), consent: true, website: $('dWeb').value
+      })
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (r) {
+        if (r.ok && r.body.ok) { msg('Sent. Check your email for your numbers.', 'ok'); showQR(r.body); btn.textContent = 'Done'; }
+        else { msg((r.body && r.body.error) || 'Could not send that. Try again.', 'bad'); btn.disabled = false; btn.textContent = orig; }
+      })
+      .catch(function () { msg('No connection. Check your signal and try again.', 'bad'); btn.disabled = false; btn.textContent = orig; });
+  });
+
+  // no details, no storage — just the plain portal link
+  $('skip').addEventListener('click', function () {
+    fetch((window.SH_API || '') + '/api/driver-qr')
+      .then(function (r) { return r.json(); })
+      .then(showQR)
+      .catch(function () { msg('Could not load the code. Check your signal.', 'bad'); });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
