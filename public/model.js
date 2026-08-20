@@ -231,14 +231,187 @@
     return (x < 0 ? '-R' : 'R') + Math.abs(x).toLocaleString('en-ZA').replace(/,/g, ' ');
   }
 
+  // per-km rates need cents; money() rounds to whole rand
+  function moneyC(v) {
+    var neg = v < 0;
+    return (neg ? '-R' : 'R') + Math.abs(v).toFixed(2);
+  }
+
   function percent(v) {
     var p = v * 100;
     return (p >= 100 ? p.toFixed(0) : p.toFixed(1).replace(/\.0$/, '')) + '%';
   }
 
+  /* ------------------------------------------------------------------
+     FLEET OPERATOR SAVINGS — the driver deal.
+     The rider's fuel saving is what lets the operator charge a higher
+     weekly rental. So the driver must still come out ahead, or the deal
+     does not hold. Petrol cost per km is derived from the pump price and
+     a fixed 30 km/l, rather than assumed.
+     ------------------------------------------------------------------ */
+  var SAVINGS_DEFAULTS = {
+    bikes: 10,
+    fuelPrice: 24.50,       // rand per litre at the pump
+    kmPerLitre: 24,         // fixed — realistic for a loaded delivery bike in traffic
+    electricPerKm: 0.62,    // battery swap cost per km
+    petrolRental: 700,      // weekly rental the rider pays on petrol
+    electricRental: 850,    // fixed — the ScootHero weekly rider rental
+    // average market kilometres a delivery rider covers each day
+    days: [80, 100, 100, 125, 140, 160, 0]
+  };
+  var DAY_NAMES = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  function normaliseSavings(raw) {
+    raw = raw || {};
+    var d = (raw.days && raw.days.length === 7) ? raw.days : SAVINGS_DEFAULTS.days;
+    return {
+      bikes:          clamp(Math.round(n(raw.bikes, SAVINGS_DEFAULTS.bikes)), 1, 200),
+      fuelPrice:      Math.max(n(raw.fuelPrice, SAVINGS_DEFAULTS.fuelPrice), 0),
+      kmPerLitre:     SAVINGS_DEFAULTS.kmPerLitre,       // fixed, not an input
+      electricPerKm:  Math.max(n(raw.electricPerKm, SAVINGS_DEFAULTS.electricPerKm), 0),
+      petrolRental:   Math.max(n(raw.petrolRental, SAVINGS_DEFAULTS.petrolRental), 0),
+      electricRental: SAVINGS_DEFAULTS.electricRental,   // fixed, not an input
+      days: d.map(function (v) { return clamp(n(v, 0), 0, 1000); })
+    };
+  }
+
+  function computeSavings(raw) {
+    var i = normaliseSavings(raw);
+    var weeklyKm = i.days.reduce(function (a, b) { return a + b; }, 0);
+
+    var petrolPerKm = i.kmPerLitre > 0 ? i.fuelPrice / i.kmPerLitre : 0;
+    var rows = i.days.map(function (km, idx) {
+      var pc = km * petrolPerKm, ec = km * i.electricPerKm;
+      return { day: DAY_NAMES[idx], km: km, petrol: pc, electric: ec, saving: pc - ec };
+    });
+
+    var petrolFuelWk   = weeklyKm * petrolPerKm;
+    var electricEnergyWk = weeklyKm * i.electricPerKm;
+    var energySaving   = petrolFuelWk - electricEnergyWk;
+
+    var driverPetrolWk   = i.petrolRental + petrolFuelWk;
+    var driverElectricWk = i.electricRental + electricEnergyWk;
+    var driverSavingWk   = driverPetrolWk - driverElectricWk;
+
+    var rentalGap        = i.electricRental - i.petrolRental;
+    var operatorUpliftWk = rentalGap * i.bikes;
+
+    // the highest electric rental that still leaves the rider better off
+    var breakEvenRental = i.petrolRental + energySaving;
+
+    return {
+      inputs: i, dayNames: DAY_NAMES, rows: rows,
+      weeklyKm: weeklyKm, petrolPerKm: petrolPerKm,
+      petrolFuelWk: petrolFuelWk, electricEnergyWk: electricEnergyWk,
+      energySaving: energySaving,
+      driverPetrolWk: driverPetrolWk, driverElectricWk: driverElectricWk,
+      driverSavingWk: driverSavingWk,
+      driverSavingMonth: driverSavingWk * C.WPM,
+      driverSavingYear: driverSavingWk * 52,
+      rentalGap: rentalGap,
+      operatorUpliftWk: operatorUpliftWk,
+      operatorUpliftMonth: operatorUpliftWk * C.WPM,
+      operatorUpliftYear: operatorUpliftWk * 52,
+      breakEvenRental: breakEvenRental,
+      driverBetterOff: driverSavingWk >= 0,
+      headroom: breakEvenRental - i.electricRental
+    };
+  }
+
+  /* ------------------------------------------------------------------
+     DRIVER OFFER — what a rider earns and what the bike costs them.
+     Rates are the observed averages from a live TDT rider working both
+     Express (courier) and Food over June–July 2026:
+       Food     R58.05 a delivery, 4.13 km average leg
+       Express  R19.63 a parcel
+     Kilometres are derived from what the rider already spends on petrol,
+     so they never have to know their own consumption.
+     ------------------------------------------------------------------ */
+  var DRIVER_DEFAULTS = {
+    foodJobs: 9,            // deliveries a day
+    expressJobs: 40,        // parcels a day
+    petrolPerDay: 180,      // rand of fuel a day
+    petrolRent: 700,        // weekly rental if the rider does not own the bike
+    daysPerWeek: 5,
+    foodRate: 58.05,
+    expressRate: 19.63,
+    fuelPrice: 25.00,
+    kmPerLitre: 24,
+    electricPerKm: 0.62,
+    electricRent: 850,      // ScootHero weekly rental, maintenance and insurance in
+    petrolMaintenanceWk: 250 // tyres, services, repairs the rider carries on petrol
+  };
+
+  function computeDriver(raw) {
+    raw = raw || {};
+    var d = {
+      foodJobs:     clamp(n(raw.foodJobs, DRIVER_DEFAULTS.foodJobs), 0, 200),
+      expressJobs:  clamp(n(raw.expressJobs, DRIVER_DEFAULTS.expressJobs), 0, 500),
+      petrolPerDay: Math.max(n(raw.petrolPerDay, DRIVER_DEFAULTS.petrolPerDay), 0),
+      petrolRent:   Math.max(n(raw.petrolRent, DRIVER_DEFAULTS.petrolRent), 0),
+      daysPerWeek:  clamp(n(raw.daysPerWeek, DRIVER_DEFAULTS.daysPerWeek), 1, 7),
+      foodRate:     Math.max(n(raw.foodRate, DRIVER_DEFAULTS.foodRate), 0),
+      expressRate:  Math.max(n(raw.expressRate, DRIVER_DEFAULTS.expressRate), 0),
+      fuelPrice:    Math.max(n(raw.fuelPrice, DRIVER_DEFAULTS.fuelPrice), 0),
+      kmPerLitre:   DRIVER_DEFAULTS.kmPerLitre,
+      electricPerKm: DRIVER_DEFAULTS.electricPerKm,
+      electricRent: DRIVER_DEFAULTS.electricRent,
+      petrolMaintenanceWk: Math.max(n(raw.petrolMaintenanceWk, DRIVER_DEFAULTS.petrolMaintenanceWk), 0)
+    };
+
+    var jobsDay   = d.foodJobs + d.expressJobs;
+    var earnDay   = d.foodJobs * d.foodRate + d.expressJobs * d.expressRate;
+    var earnWk    = earnDay * d.daysPerWeek;
+    var earnMonth = earnWk * C.WPM;
+
+    // kilometres inferred from the rider's own fuel spend
+    var petrolPerKm = d.kmPerLitre > 0 ? d.fuelPrice / d.kmPerLitre : 0;
+    var kmDay  = petrolPerKm > 0 ? d.petrolPerDay / petrolPerKm : 0;
+    var kmWk   = kmDay * d.daysPerWeek;
+
+    // --- petrol bike ---
+    var pFuelWk  = d.petrolPerDay * d.daysPerWeek;
+    var pMaintWk = d.petrolMaintenanceWk;
+    var pRentWk  = d.petrolRent;
+    var pCostWk  = pFuelWk + pMaintWk + pRentWk;
+
+    // --- electric: rental covers maintenance, insurance and tracking ---
+    var eEnergyWk = kmWk * d.electricPerKm;
+    var eRentWk   = d.electricRent;
+    var eCostWk   = eEnergyWk + eRentWk;
+
+    var jobsWk = jobsDay * d.daysPerWeek;
+    return {
+      inputs: d,
+      jobsDay: jobsDay, jobsWk: jobsWk, jobsMonth: jobsWk * C.WPM,
+      earnDay: earnDay, earnWk: earnWk, earnMonth: earnMonth,
+      earnPerJob: jobsDay > 0 ? earnDay / jobsDay : 0,
+      foodShare: jobsDay > 0 ? d.foodJobs / jobsDay : 0,
+      petrolPerKm: petrolPerKm, kmDay: kmDay, kmWk: kmWk, kmMonth: kmWk * C.WPM,
+
+      pFuelWk: pFuelWk, pMaintWk: pMaintWk, pRentWk: pRentWk,
+      pCostWk: pCostWk, pCostMonth: pCostWk * C.WPM,
+      pNetWk: earnWk - pCostWk, pNetMonth: (earnWk - pCostWk) * C.WPM,
+      pCostPerJob: jobsWk > 0 ? pCostWk / jobsWk : 0,
+
+      eEnergyWk: eEnergyWk, eRentWk: eRentWk,
+      eCostWk: eCostWk, eCostMonth: eCostWk * C.WPM,
+      eNetWk: earnWk - eCostWk, eNetMonth: (earnWk - eCostWk) * C.WPM,
+      eCostPerJob: jobsWk > 0 ? eCostWk / jobsWk : 0,
+
+      savingWk: pCostWk - eCostWk,
+      savingMonth: (pCostWk - eCostWk) * C.WPM,
+      savingYear: (pCostWk - eCostWk) * 52,
+      betterOff: (pCostWk - eCostWk) >= 0
+    };
+  }
+
   return {
     CONSTANTS: C, DEFAULTS: DEFAULTS,
+    DRIVER_DEFAULTS: DRIVER_DEFAULTS, computeDriver: computeDriver,
+    SAVINGS_DEFAULTS: SAVINGS_DEFAULTS, DAY_NAMES: DAY_NAMES,
+    normaliseSavings: normaliseSavings, computeSavings: computeSavings,
     normalise: normalise, compute: compute, heroCareRate: heroCareRate, modelRules: modelRules,
-    fundLabel: fundLabel, money: money, percent: percent
+    fundLabel: fundLabel, money: money, moneyC: moneyC, percent: percent
   };
 });
