@@ -251,7 +251,7 @@
      ------------------------------------------------------------------ */
   var SAVINGS_DEFAULTS = {
     bikes: 10,
-    fuelPrice: 24.50,       // rand per litre at the pump
+    fuelPrice: 25.34,       // rand per litre — three-month average pump price
     kmPerLitre: 24,         // fixed — realistic for a loaded delivery bike in traffic
     electricPerKm: 0.62,    // battery swap cost per km
     petrolRental: 700,      // weekly rental the rider pays on petrol
@@ -320,8 +320,9 @@
 
   /* ------------------------------------------------------------------
      DRIVER OFFER — what a rider earns and what the bike costs them.
-     Rates are the observed averages from a live TDT rider working both
-     Express (courier) and Food over June–July 2026:
+     Rates are anonymised averages taken from delivery activity across the
+     TDT cohort over June–July 2026. No individual rider is identified here
+     or on the page; only the aggregate per-job rates are used.
        Food     R58.05 a delivery, 4.13 km average leg
        Express  R19.63 a parcel
      Kilometres are derived from what the rider already spends on petrol,
@@ -330,12 +331,12 @@
   var DRIVER_DEFAULTS = {
     foodJobs: 9,            // deliveries a day
     expressJobs: 40,        // parcels a day
-    petrolPerDay: 180,      // rand of fuel a day
+    petrolPerDay: 130,      // rand of fuel a day — the observed spend for this rider
     petrolRent: 700,        // weekly rental if the rider does not own the bike
     daysPerWeek: 5,
     foodRate: 58.05,
     expressRate: 19.63,
-    fuelPrice: 25.00,
+    fuelPrice: 25.34,       // rand per litre — three-month average pump price
     kmPerLitre: 24,
     electricPerKm: 0.62,
     electricRent: 850,      // ScootHero weekly rental, maintenance and insurance in
