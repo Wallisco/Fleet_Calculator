@@ -1,0 +1,56 @@
+'use strict';
+/**
+ * One source of truth for the notices that must appear wherever we show
+ * indicative figures or collect personal information. Change them here and
+ * every page, PDF and email follows.
+ */
+
+const PRIVACY_EMAIL = process.env.PRIVACY_EMAIL || 'privacy@scoothero.co.za';
+const PRIVACY_URL = process.env.PRIVACY_URL || 'https://www.scoothero.co.za/privacy-policy';
+
+/* ---------- earnings, for anything shown to a rider ---------- */
+const EARNINGS_SHORT =
+  'Indicative only. Not a promise of work, earnings or payment.';
+
+const EARNINGS_FULL =
+  'These figures are indicative only. ScootHero uses aggregated, anonymised delivery data ' +
+  'from across the industry to show what activity of this kind has typically paid. They are ' +
+  'not an offer, promise or guarantee of work, earnings or payment of any amount. ScootHero ' +
+  'does not employ delivery riders, does not allocate jobs and does not set or pay these ' +
+  'rates. What you actually earn depends on the platform or operator you work for, the jobs ' +
+  'you accept, your area, your hours and your own running costs, and may be materially ' +
+  'higher or lower than shown.';
+
+/* ---------- returns, for anything shown to an operator ---------- */
+const RETURNS_FULL =
+  'These figures are indicative only and are built on the assumptions shown, including ' +
+  'aggregated industry data. They are not a forecast, a guarantee of return, or an offer of ' +
+  'finance. Actual results depend on rentals achieved, utilisation, rider retention, running ' +
+  'costs and market conditions, and may be materially different. Nothing here constitutes ' +
+  'financial, tax or legal advice — take your own before committing.';
+
+/* ---------- POPIA, at every point of collection ---------- */
+const POPIA_CONSENT =
+  'I agree that ScootHero may store the details and figures I have entered, send me my ' +
+  'results, and contact me about this enquiry. I understand I can withdraw this at any time.';
+
+const POPIA_FULL =
+  'ScootHero (Pty) Ltd is the responsible party for the personal information you enter here. ' +
+  'We collect your name, contact details and the figures you enter for one purpose: to send ' +
+  'you your results and to follow up on your enquiry. We process it on the basis of the ' +
+  'consent you give above, which you may withdraw at any time. We keep it only as long as ' +
+  'that purpose requires, we do not sell it, and we share it only with the service providers ' +
+  'who help us deliver it to you. You may ask to see, correct or delete your information, or ' +
+  'object to its processing, by emailing ' + PRIVACY_EMAIL + '. You may also lodge a ' +
+  'complaint with the Information Regulator of South Africa.';
+
+const POPIA_SHORT =
+  'Your details are processed with your consent under POPIA, used only to send your results ' +
+  'and follow up, and never sold. Email ' + PRIVACY_EMAIL + ' to see, correct or delete them.';
+
+module.exports = {
+  PRIVACY_EMAIL, PRIVACY_URL,
+  EARNINGS_SHORT, EARNINGS_FULL,
+  RETURNS_FULL,
+  POPIA_CONSENT, POPIA_FULL, POPIA_SHORT
+};
