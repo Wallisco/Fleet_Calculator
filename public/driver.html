@@ -71,10 +71,34 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
 .col .tot{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14)}
 .col .tot b{color:var(--mint);font-size:16px}
 
+.plain{margin:18px 0 10px;font-size:13.5px;color:#C4C9DA;line-height:1.5}
+.plain b{color:#fff;font-family:'Lexend',sans-serif;font-weight:600}
 .perjob{margin-top:16px;background:var(--navy-2);border:1px solid var(--edge);border-radius:12px;padding:15px}
 .perjob .h{font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin-bottom:10px}
 .perjob .r{display:flex;justify-content:space-between;font-size:13px;color:#C4C9DA;padding:4px 0}
 .perjob .r b{font-family:'Lexend',sans-serif;color:#fff;font-weight:500}
+
+/* savings bands */
+.bandbox{margin-top:16px;background:#0F6E56;border-radius:16px;overflow:hidden}
+.bandtop{padding:20px 22px 16px}
+.bl{font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#CFF3E2}
+.bv{font-family:'Lexend',sans-serif;font-size:clamp(34px,9vw,46px);font-weight:700;line-height:1.05;color:#fff;margin-top:4px}
+.bs{font-size:13px;color:#CFF3E2;margin-top:5px}
+.bandnow{display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.10);padding:16px 22px}
+.bandart{flex:0 0 auto;width:74px;height:74px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.bandart svg{width:52px;height:52px;display:block}
+.bandtext{min-width:0}
+.bandtext .bt{font-family:'Lexend',sans-serif;font-size:16px;font-weight:600;color:#fff;line-height:1.25}
+.bandtext .bd{font-size:12.5px;color:#CFF3E2;margin-top:5px;line-height:1.45}
+.ladder{padding:14px 22px 20px;display:grid;gap:8px}
+.rung{display:flex;align-items:center;gap:11px;font-size:12.5px;color:#9FD9C0;opacity:.62}
+.rung.hit{opacity:1;color:#fff}
+.rung .tick{flex:0 0 auto;width:19px;height:19px;border-radius:50%;border:1.5px solid #4E9E7E;display:flex;align-items:center;justify-content:center;font-size:11px;color:#4E9E7E}
+.rung.hit .tick{background:#79F1A1;border-color:#79F1A1;color:#0A3D2A;font-weight:700}
+.rung .amt{font-family:'Lexend',sans-serif;font-weight:600;min-width:62px}
+.bandmiss{background:#7A3B1E}
+.bandmiss .bl,.bandmiss .bs,.bandmiss .bandtext .bd{color:#F3D9C0}
+.bandmiss .rung{color:#E0BBA0}
 
 /* cta */
 .cta{border:2px solid var(--orange);border-radius:16px;padding:22px;text-align:center;margin-top:8px}
@@ -186,9 +210,9 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
     <h2 id="ansH">What you earn</h2>
 
     <div class="big">
-      <div class="l">You earn a month</div>
+      <div class="l">You bring in a month</div>
       <div class="v" id="earnMonth">R0</div>
-      <div class="s" id="earnSub">before what the bike costs you</div>
+      <div class="s" id="earnSub">before you pay for the bike and fuel</div>
     </div>
 
     <div class="two">
@@ -196,27 +220,29 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
       <div class="tile"><div class="l">You get paid</div><div class="v" id="perJob">R0</div><div class="s">a job, on your mix</div></div>
     </div>
 
+    <p class="plain">This is what is left <b>every week</b> after you pay for the bike, the fuel and the repairs. It is the money that goes into your bank.</p>
+
     <div class="vs">
       <div class="col p">
-        <div class="h">Petrol bike, a week</div>
-        <div class="r"><span>Petrol</span><b id="pFuel">R0</b></div>
+        <div class="h">If you stay on petrol</div>
+        <div class="r"><span>Petrol you buy</span><b id="pFuel">R0</b></div>
         <div class="r"><span>Repairs and tyres</span><b id="pMaint">R0</b></div>
-        <div class="r"><span>Bike rental</span><b id="pRent">R0</b></div>
-        <div class="r tot"><span>You keep</span><b id="pNet">R0</b></div>
+        <div class="r"><span>Money for the bike</span><b id="pRent">R0</b></div>
+        <div class="r tot"><span>Money you take home</span><b id="pNet">R0</b></div>
       </div>
       <div class="col e">
-        <div class="h">Electric bike, a week</div>
-        <div class="r"><span>Charging</span><b id="eEnergy">R0</b></div>
-        <div class="r"><span>Repairs and tyres</span><b>Included</b></div>
-        <div class="r"><span>Bike rental</span><b id="eRent">R0</b></div>
-        <div class="r tot"><span>You keep</span><b id="eNet">R0</b></div>
+        <div class="h">If you go electric</div>
+        <div class="r"><span>Charging the battery</span><b id="eEnergy">R0</b></div>
+        <div class="r"><span>Repairs and tyres</span><b>We pay</b></div>
+        <div class="r"><span>Money for the bike</span><b id="eRent">R0</b></div>
+        <div class="r tot"><span>Money you take home</span><b id="eNet">R0</b></div>
       </div>
     </div>
 
     <div class="perjob">
-      <div class="h">What each job costs you</div>
-      <div class="r"><span>On petrol</span><b id="pPerJob">R0</b></div>
-      <div class="r"><span>On electric</span><b id="ePerJob">R0</b></div>
+      <div class="h">What one job costs you</div>
+      <div class="r"><span>Riding a petrol bike</span><b id="pPerJob">R0</b></div>
+      <div class="r"><span>Riding electric</span><b id="ePerJob">R0</b></div>
       <div class="r" style="padding-top:8px;margin-top:6px;border-top:1px solid var(--edge)"><span>You ride about</span><b id="kmWeek">0 km a week</b></div>
     </div>
 
@@ -226,10 +252,20 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
       platform or operator you work for, the jobs you accept, your area and your hours.
     </p>
 
-    <div class="big" style="margin:16px 0 0;background:#0F6E56">
-      <div class="l">Extra in your pocket on electric</div>
-      <div class="v" id="saveMonth">R0</div>
-      <div class="s" id="saveSub">a month</div>
+    <div class="bandbox" id="bandbox">
+      <div class="bandtop">
+        <div class="bl">Extra in your pocket on electric</div>
+        <div class="bv" id="saveMonth">R0</div>
+        <div class="bs" id="saveSub">a month</div>
+      </div>
+      <div class="bandnow" id="bandnow">
+        <div class="bandart" id="bandart"></div>
+        <div class="bandtext">
+          <div class="bt" id="bandTitle"></div>
+          <div class="bd" id="bandDesc"></div>
+        </div>
+      </div>
+      <div class="ladder" id="ladder"></div>
     </div>
   </section>
 
@@ -310,6 +346,70 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
     };
   }
 
+
+  // What the extra money is actually for. Written for riders supporting family
+  // here and at home — school fees, healthcare, building, and getting a second
+  // bike earning. Edit the copy here as you learn what matters to them.
+  var ART = {
+    send: '<svg viewBox="0 0 48 48" fill="none" stroke="#0F6E56" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="12" width="38" height="24" rx="3"/><path d="M5 16l19 12 19-12"/><path d="M17 41h14"/></svg>',
+    school: '<svg viewBox="0 0 48 48" fill="none" stroke="#0F6E56" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 7 5 16l19 9 19-9-19-9z"/><path d="M13 21v11c0 3 5 6 11 6s11-3 11-6V21"/><path d="M41 17v11"/></svg>',
+    health: '<svg viewBox="0 0 48 48" fill="none" stroke="#0F6E56" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 41S7 30 7 19a9 9 0 0 1 17-4 9 9 0 0 1 17 4c0 11-17 22-17 22z"/><path d="M24 20v9M19.5 24.5h9"/></svg>',
+    home: '<svg viewBox="0 0 48 48" fill="none" stroke="#0F6E56" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22 24 8l18 14"/><path d="M11 19v20h26V19"/><path d="M20 39V27h8v12"/></svg>',
+    bike: '<svg viewBox="0 0 48 48" fill="none" stroke="#0F6E56" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="33" r="7"/><circle cx="36" cy="33" r="7"/><path d="M12 33l7-15h9l7 15M19 18l-2-5h-4m11 5h8"/></svg>'
+  };
+
+  var BANDS = [
+    { min: 500,  art: 'send',   title: 'Send money home every month',
+      desc: 'R500 covers a regular transfer to family back home, without touching what you live on here.' },
+    { min: 1000, art: 'school', title: 'Pay a child\u2019s school fees',
+      desc: 'R1 000 a month covers school fees, uniform and shoes for a child \u2014 here or back home.' },
+    { min: 1500, art: 'health', title: 'Healthcare for your family',
+      desc: 'R1 500 a month buys basic medical cover, or saves toward a car over two years.' },
+    { min: 2000, art: 'bike',   title: 'Put a second bike on the road',
+      desc: 'R2 000 a month puts another bike out with a rider working for you \u2014 or starts building your home.' }
+  ];
+
+  function renderBands(m) {
+    var box = $('bandbox'), amt = m.savingMonth;
+    box.classList.toggle('bandmiss', !m.betterOff);
+
+    if (!m.betterOff) {
+      $('saveMonth').textContent = R(Math.abs(amt));
+      $('saveSub').textContent = 'a month more on electric at these numbers \u2014 talk to us';
+      $('bandart').innerHTML = ART.send;
+      $('bandTitle').textContent = 'Let us look at your numbers';
+      $('bandDesc').textContent = 'On what you have entered, electric would cost you more. Your rates or your kilometres may be different \u2014 come and talk to us.';
+      $('ladder').innerHTML = '';
+      return;
+    }
+
+    $('saveMonth').textContent = R(amt);
+    $('saveSub').textContent = 'a month \u2014 that is ' + R(m.savingYear) + ' a year';
+
+    var hit = null;
+    for (var i = 0; i < BANDS.length; i++) if (amt >= BANDS[i].min) hit = BANDS[i];
+
+    if (hit) {
+      $('bandart').innerHTML = ART[hit.art];
+      $('bandTitle').textContent = hit.title;
+      $('bandDesc').textContent = hit.desc;
+      $('bandnow').style.display = '';
+    } else {
+      $('bandart').innerHTML = ART.send;
+      $('bandTitle').textContent = 'Every rand helps';
+      $('bandDesc').textContent = 'Work a little more, or ride more kilometres, and the saving grows quickly.';
+      $('bandnow').style.display = '';
+    }
+
+    $('ladder').innerHTML = BANDS.map(function (bnd) {
+      var got = amt >= bnd.min;
+      return '<div class="rung' + (got ? ' hit' : '') + '">' +
+             '<span class="tick">' + (got ? '\u2713' : '') + '</span>' +
+             '<span class="amt">' + R(bnd.min) + '</span>' +
+             '<span>' + bnd.title + '</span></div>';
+    }).join('');
+  }
+
   function render() {
     var m = SH.computeDriver(raw());
     $('earnMonth').textContent = R(m.earnMonth);
@@ -330,15 +430,7 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
     $('ePerJob').textContent = RC(m.eCostPerJob);
     $('kmWeek').textContent  = Math.round(m.kmWk) + ' km a week';
 
-    if (m.betterOff) {
-      $('saveMonth').parentElement.style.background = '#0F6E56';
-      $('saveMonth').textContent = R(m.savingMonth);
-      $('saveSub').textContent = 'a month — that is ' + R(m.savingYear) + ' a year';
-    } else {
-      $('saveMonth').parentElement.style.background = '#7A3B1E';
-      $('saveMonth').textContent = R(Math.abs(m.savingMonth));
-      $('saveSub').textContent = 'a month more on electric at these numbers — talk to us';
-    }
+    renderBands(m);
   }
 
   ['food','express','petrol','rent','maint'].forEach(function (id) {
