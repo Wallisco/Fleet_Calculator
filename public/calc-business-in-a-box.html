@@ -224,6 +224,12 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
 .qrow.qtot b{font-size:19px;font-weight:600;color:var(--navy)}
 .qnote{margin:12px 0 0;font-size:11.5px;color:var(--muted)}
 
+.popia{font-size:11.5px;color:var(--muted);line-height:1.55;margin:0 0 14px}
+.popia a{color:var(--orange)}
+.notice{background:#FFF8E8;border:1px solid #E8D9A8;border-radius:10px;padding:12px 14px;font-size:12.5px;color:#6B5416;line-height:1.5;margin:16px 0 0}
+.notice b{font-family:'Lexend',sans-serif;font-weight:600}
+.foot a{color:var(--orange)}
+
 /* cta */
 .cta{margin-top:36px;background:var(--navy);border-radius:var(--r);padding:26px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .cta h2{color:#fff;font-size:19px}
@@ -410,6 +416,8 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
     </div>
   </section>
 
+  <p class="notice" style="max-width:none"><b>Indicative only.</b> Built on the assumptions shown and aggregated industry data. Not a forecast, a guarantee of return, or an offer of finance.</p>
+
   <section class="sec proc" aria-label="How it works">
     <h2>How it works</h2>
     <p class="lede">Three things to set up, then the same cycle every week. Figures below are for your fleet as you've set it.</p>
@@ -568,7 +576,7 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
     <h2>Get this as a proposal</h2>
     <p class="lede">We'll email you a proposal with exactly these numbers, the steps that follow, and a page to sign off when you're ready to proceed.</p>
     <div class="cap-grid">
-      <div><label for="cName">Your name</label><input id="cName" type="text" autocomplete="name" placeholder="Thabo Mokoena"></div>
+      <div><label for="cName">Your name</label><input id="cName" type="text" autocomplete="name" placeholder="Your name"></div>
       <div><label for="cEmail">Email address</label><input id="cEmail" type="email" autocomplete="email" placeholder="you@company.co.za" required></div>
       <div><label for="cCompany">Company</label><input id="cCompany" type="text" autocomplete="organization" placeholder="Optional"></div>
       <div><label for="cPhone">Mobile</label><input id="cPhone" type="tel" autocomplete="tel" placeholder="Optional"></div>
@@ -576,8 +584,16 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
     <div class="hp" aria-hidden="true"><label for="cWebsite">Website</label><input id="cWebsite" type="text" tabindex="-1" autocomplete="off"></div>
     <label class="consent" for="cConsent">
       <input type="checkbox" id="cConsent">
-      <span>Email me this calculation and store it with my details so ScootHero can follow up about a fleet. I can ask you to delete it at any time.</span>
+      <span>I agree that ScootHero may store the details and figures I have entered, send me my results, and contact me about this enquiry. I understand I can withdraw this at any time.</span>
     </label>
+    <p class="popia">
+      ScootHero (Pty) Ltd is the responsible party for the information you enter. We use it only to
+      send your results and follow up on this enquiry, we keep it only as long as that needs, and we
+      never sell it. To see, correct or delete it, email
+      <a href="mailto:privacy@scoothero.co.za">privacy@scoothero.co.za</a>. You may also complain to
+      the Information Regulator of South Africa.
+      <a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>
+    </p>
     <div class="cap-actions">
       <button type="button" class="btn" id="capSend">Email me the proposal</button>
       <button type="button" class="btn-ghost" id="capDownload">Just download it</button>
@@ -590,11 +606,12 @@ tr.on td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
       <h2>Get these numbers on your name</h2>
       <p>We'll confirm the rent your area supports, check swap station coverage on your routes, and put the finance in front of Eqstra.</p>
     </div>
-    <a class="btn" href="#" id="ctaBtn">Book a 15-minute call</a>
+    <a class="btn" href="demo.html" target="_top" id="ctaBtn">Book a 15-minute call</a>
   </section>
 
   <p class="foot">
-    All figures exclude VAT and are estimates, not a quote or an offer of finance. Finance is subject to credit approval through Eqstra, a Nedbank company; rates of 15.5% (operating lease) and 16% (lease to own) are indicative. Rent achievable and running costs vary by area, rider and usage. Returns assume bikes are on rent for the share of weeks you set above, exclude tax, your own admin costs, any residual owing at the end of a lease, and any resale value of the bikes. Speak to us before making a financial decision.
+    <b>Indicative only.</b> These figures are built on the assumptions shown, including aggregated industry data. They are not a forecast, a guarantee of return, or an offer of finance. Actual results depend on rentals achieved, utilisation, rider retention, running costs and market conditions, and may be materially different. Nothing here is financial, tax or legal advice. All figures exclude VAT and are estimates, not a quote or an offer of finance. Finance is subject to credit approval through Eqstra, a Nedbank company; rates of 15.5% (operating lease) and 16% (lease to own) are indicative. Rent achievable and running costs vary by area, rider and usage. Returns assume bikes are on rent for the share of weeks you set above, exclude tax, your own admin costs, any residual owing at the end of a lease, and any resale value of the bikes. Speak to us before making a financial decision.
+   <br><br><b>Your information.</b> Details you enter are processed with your consent under the Protection of Personal Information Act, used only to send your results and follow up, and never sold. Email <a href="mailto:privacy@scoothero.co.za">privacy@scoothero.co.za</a> to see, correct or delete them, or read the <a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">privacy policy</a>.
   </p>
 </div>
 
