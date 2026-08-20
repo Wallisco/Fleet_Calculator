@@ -1,4 +1,4 @@
-n<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-ZA">
 <head>
 <meta charset="utf-8">
@@ -108,6 +108,13 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
 .qrbox .ref{font-family:'Lexend',sans-serif;font-size:13px;color:var(--ink);margin-top:12px}
 .qrbox a{display:inline-block;margin-top:10px;font-size:13px;color:var(--orange);word-break:break-all}
 
+.notice{background:#FFF8E8;border:1px solid #E8D9A8;border-radius:10px;padding:12px 14px;
+  font-size:12.5px;color:#6B5416;line-height:1.5;margin:0 0 18px}
+.notice b{font-family:'Lexend',sans-serif;font-weight:600}
+.notice.dark{background:#2A2010;border-color:#5A431A;color:#F3D9A8;margin:16px 0 0}
+.popia{font-size:11.5px;color:var(--muted);line-height:1.55;text-align:left;margin:0 0 16px}
+.popia a{color:var(--orange)}
+.foot a{color:var(--orange)}
 .foot{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.6}
 @media (max-width:430px){ .two,.vs{grid-template-columns:1fr} }
 </style>
@@ -123,6 +130,12 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
 </div>
 
 <div class="wrap">
+
+  <p class="notice" role="note">
+    <b>Indicative only.</b> These figures come from aggregated, anonymised industry delivery data.
+    They are not a promise of work, earnings or payment — ScootHero does not employ riders,
+    allocate jobs or set these rates.
+  </p>
 
   <section class="card">
     <h2>Your work</h2>
@@ -153,7 +166,7 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
     <div class="q">
       <label for="petrol">Petrol a day</label>
       <div class="help">What you put in the tank on a working day</div>
-      <div class="inp"><span class="pre">R</span><input id="petrol" type="number" min="0" step="10" value="180" inputmode="numeric"></div>
+      <div class="inp"><span class="pre">R</span><input id="petrol" type="number" min="0" step="10" value="130" inputmode="numeric"></div>
     </div>
 
     <div class="q">
@@ -207,6 +220,12 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
       <div class="r" style="padding-top:8px;margin-top:6px;border-top:1px solid var(--edge)"><span>You ride about</span><b id="kmWeek">0 km a week</b></div>
     </div>
 
+    <p class="notice dark">
+      <b>Indicative only.</b> Based on aggregated industry data and the numbers you entered.
+      Not an offer or guarantee of work, earnings or payment. What you earn depends on the
+      platform or operator you work for, the jobs you accept, your area and your hours.
+    </p>
+
     <div class="big" style="margin:16px 0 0;background:#0F6E56">
       <div class="l">Extra in your pocket on electric</div>
       <div class="v" id="saveMonth">R0</div>
@@ -218,15 +237,24 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
     <h2>Interested in an electric bike?</h2>
     <p>Leave your details and we'll send you these numbers, plus a code to get started.</p>
 
-    <div class="field"><label for="dName">Your name</label><input id="dName" type="text" autocomplete="name" placeholder="Peter Pan"></div>
+    <div class="field"><label for="dName">Your name</label><input id="dName" type="text" autocomplete="name" placeholder="Your name"></div>
     <div class="field"><label for="dPhone">Mobile number</label><input id="dPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="082 000 0000"></div>
     <div class="field"><label for="dEmail">Email address</label><input id="dEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@email.com"></div>
     <div class="hp" aria-hidden="true"><label for="dWeb">Website</label><input id="dWeb" type="text" tabindex="-1" autocomplete="off"></div>
 
     <label class="consent" for="dConsent">
       <input type="checkbox" id="dConsent">
-      <span>Send me my numbers and keep my details so ScootHero can contact me about an electric bike. I can ask you to delete them any time.</span>
+      <span>I agree that ScootHero may store the details and figures I have entered, send me my results, and contact me about this enquiry. I understand I can withdraw this at any time.</span>
     </label>
+
+    <p class="popia">
+      ScootHero (Pty) Ltd is the responsible party for the information you enter. We use it only
+      to send your results and follow up on this enquiry, we keep it only as long as that needs,
+      and we never sell it. To see, correct or delete it, email
+      <a href="mailto:privacy@scoothero.co.za">privacy@scoothero.co.za</a>. You may also complain
+      to the Information Regulator of South Africa.
+      <a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>
+    </p>
 
     <button type="button" class="btn" id="go">Show me my code</button>
     <button type="button" class="btn-ghost" id="skip">Just show me the code</button>
@@ -242,7 +270,11 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
   </section>
 
   <p class="foot">
-    Earnings use the average rates a working rider was paid over June and July 2026 — R58.05 a food delivery and R19.63 an express parcel. Your own rates may differ. Kilometres are worked out from what you spend on petrol, at 24 km a litre. On electric, the weekly rental covers maintenance, tyres, insurance and tracking; you pay only for charging at 62c a kilometre. Figures are estimates to help you compare, not an offer of work or credit.
+    <b>Earnings disclaimer.</b> These figures are indicative only. ScootHero uses aggregated, anonymised delivery data from across the industry to show what activity of this kind has typically paid. They are not an offer, promise or guarantee of work, earnings or payment of any amount. ScootHero does not employ delivery riders, does not allocate jobs and does not set or pay these rates. What you actually earn depends on the platform or operator you work for, the jobs you accept, your area, your hours and your own running costs, and may be materially higher or lower than shown.
+    <br><br>
+    <b>How these numbers are built.</b> Average per-job rates across delivery activity in June and July 2026 — R58.05 a food delivery and R19.63 an express parcel. Kilometres are worked out from what you spend on petrol, at 24 km a litre. On electric, the weekly rental covers maintenance, tyres, insurance and tracking; you pay only for charging at 62c a kilometre. All figures exclude VAT.
+    <br><br>
+    <b>Your information.</b> Your details are processed with your consent under the Protection of Personal Information Act, used only to send your results and follow up, and never sold. Email <a href="mailto:privacy@scoothero.co.za">privacy@scoothero.co.za</a> to see, correct or delete them, or read the <a href="https://www.scoothero.co.za/privacy-policy" target="_blank" rel="noopener">privacy policy</a>.
   </p>
 </div>
 
@@ -273,7 +305,7 @@ h1,h2,h3{font-family:'Lexend',sans-serif;font-weight:600;letter-spacing:-.01em;m
   function raw() {
     return {
       foodJobs: num('food', 9), expressJobs: num('express', 40),
-      petrolPerDay: num('petrol', 180), petrolRent: num('rent', 700),
+      petrolPerDay: num('petrol', 130), petrolRent: num('rent', 700),
       petrolMaintenanceWk: num('maint', 250), daysPerWeek: days
     };
   }
