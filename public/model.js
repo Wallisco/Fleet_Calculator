@@ -330,12 +330,12 @@
      ------------------------------------------------------------------ */
   var DRIVER_DEFAULTS = {
     foodJobs: 9,            // deliveries a day
-    expressJobs: 40,        // parcels a day
+    expressJobs: 0,         // parcels a day — zero unless the rider already does express
     petrolPerDay: 130,      // rand of fuel a day — the observed spend for this rider
     petrolRent: 700,        // weekly rental if the rider does not own the bike
     daysPerWeek: 5,
     foodRate: 58.05,
-    expressRate: 19.63,
+    expressRate: 18.25,     // flat rate; fuel surcharge sits on top and moves monthly
     fuelPrice: 25.34,       // rand per litre — three-month average pump price
     kmPerLitre: 24,
     electricPerKm: 0.62,
@@ -363,22 +363,27 @@
     kmPerOrder: 4.49
   };
 
-  /* Express is e-commerce driven, so volume rises and falls with what the
-     retailers are shipping — it is not a fixed daily allocation. On a light
-     express day riders top up with food, which is why express riders appear
-     inside the food cohort above and why their food count is residual work
-     rather than a measure of how good they are. The food data bears this out:
-     day-to-day food volume swings by about 1.5x its own average per rider.
+  /* EXPRESS IS NOT A SELLING POINT AND MUST NOT BE TREATED AS ONE.
+     The operator runs a closed team of 24 express riders. It is full. Entry
+     depends on someone leaving and on the rider having earned it over time —
+     roughly 2 to 4 riders were added across the last two years. A rider coming
+     in today may never do express at all.
 
-     Consequence for ranking: judge a rider on TOTAL earnings a day, not on the
-     food/express split, because the split moves week to week. Express is used
-     only as a plausibility check on the upper end. */
+     So: express defaults to zero, it is never used to sell, and it is excluded
+     from the decision on whether to put a bike under someone. If their ability
+     to carry the rental depends on express income they might lose, that is not
+     an approval. It is counted only as upside for a rider who already has it.
+
+     Rate is a flat R18.25 a parcel plus a fuel surcharge that moves monthly
+     with the pump price, up or down. No other variables. */
   var EXPRESS = {
-    riders: 40,               // riders holding express routes at this branch
-    typicalPerDay: 40,        // a good express day
-    upperPerDay: 70,          // beyond this is not a real day, even a busy one
-    ratePerParcel: 19.63,
-    variable: true
+    riders: 24,               // the whole express team, and it is full
+    closed: true,
+    addedInTwoYears: '2 to 4',
+    typicalPerDay: 40,
+    upperPerDay: 70,
+    ratePerParcel: 18.25,     // flat, plus a monthly fuel surcharge
+    surchargeNote: 'plus a fuel surcharge that changes monthly with the pump price'
   };
 
   /* Food earnings a day, from the cohort's own distribution. This is the only
@@ -436,13 +441,19 @@
 
     var mixNote =
       expressClaim === 'none'
-        ? ' Food only, so their week is steadier but caps out lower.'
-        : ' Mix is about ' + Math.round(foodShare * 100) + '% food and ' +
-          Math.round((1 - foodShare) * 100) + '% express. Express is e-commerce driven, so that split ' +
-          'moves week to week — on light express days they top up with food.';
+        ? ''
+        : ' They also report ' + exp.toFixed(0) + ' express parcels a day, worth ' +
+          money(exp * EXPRESS.ratePerParcel) + ' on top. That is upside only — the express team is closed at ' +
+          EXPRESS.riders + ' riders, so it has been excluded from whether they can carry the bike.';
 
     var margin = m.eNetWk;
-    var coversRental = m.earnWk > 0 ? m.eCostWk / m.earnWk : 1;
+    // Affordability is tested on FOOD EARNINGS ONLY. Express can be taken away
+    // — the team is closed and entry is not guaranteed — so approving someone
+    // whose rental only works with express income would be lending against
+    // income they may lose.
+    var foodEarnWk = foodEarnDay * m.inputs.daysPerWeek;
+    var coversRental = foodEarnWk > 0 ? m.eCostWk / foodEarnWk : 99;
+    var coversAllIn = m.earnWk > 0 ? m.eCostWk / m.earnWk : 99;
 
     var verdict, reason;
     if (expressClaim === 'above') {
@@ -456,25 +467,23 @@
     } else if (margin <= 0) {
       verdict = 'Not yet';
       reason = 'On their own numbers the bike costs more than they bring in. Not a fit today.' + mixNote;
-    } else if (coversRental <= 0.30 && i >= 1) {
+    } else if (coversRental <= 0.42 && i >= 2) {
       verdict = 'Yes';
-      reason = 'Brings in ' + money(earnDay) + ' a day all in, and the bike takes only ' +
-               Math.round(coversRental * 100) + '% of it. On food alone they sit ' +
-               (i >= 2 ? 'ahead of most' : 'around the middle') + ' of the branch.' + mixNote;
-    } else if (coversRental <= 0.30) {
-      // light on food but the express side carries them
+      reason = 'Food work of ' + money(foodEarnDay) + ' a day puts them ahead of most at the branch, and the ' +
+               'bike takes ' + Math.round(coversRental * 100) + '% of food earnings alone.' + mixNote;
+    } else if (coversRental <= 0.58 && i >= 1) {
       verdict = 'Yes, with checks';
-      reason = 'Brings in ' + money(earnDay) + ' a day all in and the bike takes ' +
-               Math.round(coversRental * 100) + '% of it, which is comfortable. Food work alone is light at ' +
-               money(foodEarnDay) + ' a day, so more of their income rides on express — confirm that with the operator.' + mixNote;
-    } else if (i === 0) {
+      reason = 'Food work of ' + money(foodEarnDay) + ' a day is around the branch middle. The bike takes ' +
+               Math.round(coversRental * 100) + '% of food earnings, which works but is not generous. ' +
+               'Confirm how many days a week they actually ride.' + mixNote;
+    } else if (coversRental <= 0.78) {
       verdict = 'Review';
-      reason = 'Food work of ' + money(foodEarnDay) + ' a day is below the branch bottom quartile, and the bike ' +
-               'would take ' + Math.round(coversRental * 100) + '% of everything they bring in. Thin.' + mixNote;
+      reason = 'The bike would take ' + Math.round(coversRental * 100) + '% of their food earnings. ' +
+               'Only viable if they lift their days or their volume.' + mixNote;
     } else {
-      verdict = 'Yes, with checks';
-      reason = 'Brings in ' + money(earnDay) + ' a day all in. The bike takes ' +
-               Math.round(coversRental * 100) + '% of it, which is workable but not generous. Confirm volumes.' + mixNote;
+      verdict = 'Not yet';
+      reason = 'Food work of ' + money(foodEarnDay) + ' a day does not carry the rental — the bike would take ' +
+               Math.round(coversRental * 100) + '% of it. Not a fit today.' + mixNote;
     }
 
     return {
@@ -482,6 +491,7 @@
       percentile: Math.round(pct), plausible: plausible,
       verdict: verdict, reason: reason,
       foodShare: foodShare, earnDay: earnDay, foodEarnDay: foodEarnDay, bands: EARN_BANDS,
+      coversAllIn: coversAllIn, expressUpside: exp * EXPRESS.ratePerParcel,
       expressClaim: expressClaim, express: EXPRESS,
       rentalShare: coversRental,
       vsCohortJobs: food - COHORT.jobsMedian,
