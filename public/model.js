@@ -343,6 +343,152 @@
     petrolMaintenanceWk: 250 // tyres, services, repairs the rider carries on petrol
   };
 
+  /* ------------------------------------------------------------------
+     COHORT BENCHMARK — TYG branch, June and July 2026.
+     271 riders, 78,891 food orders, R4.21m paid out. Quartiles below are
+     computed per rider across their own active days, so a rider working
+     three days is not penalised against one working sixty.
+     IMPORTANT: this cohort covers FOOD DELIVERIES ONLY. There is no express
+     cohort behind it, so express volume cannot be benchmarked or verified the
+     same way — a rider whose work is mostly express is ranked on a small part
+     of what they do, and the verdict says so rather than pretending otherwise.
+     Aggregated and anonymised; no rider is identifiable.
+     ------------------------------------------------------------------ */
+  var COHORT = {
+    source: 'TYG branch, June–July 2026',
+    scope: 'food deliveries only',
+    riders: 271, orders: 78891,
+    jobsP25: 4.9, jobsMedian: 8.4, jobsP75: 10.4, jobsMax: 16.3,
+    earnPerOrder: 54.89, earnDayMedian: 453, earnDayP75: 553,
+    kmPerOrder: 4.49
+  };
+
+  /* Express is e-commerce driven, so volume rises and falls with what the
+     retailers are shipping — it is not a fixed daily allocation. On a light
+     express day riders top up with food, which is why express riders appear
+     inside the food cohort above and why their food count is residual work
+     rather than a measure of how good they are. The food data bears this out:
+     day-to-day food volume swings by about 1.5x its own average per rider.
+
+     Consequence for ranking: judge a rider on TOTAL earnings a day, not on the
+     food/express split, because the split moves week to week. Express is used
+     only as a plausibility check on the upper end. */
+  var EXPRESS = {
+    riders: 40,               // riders holding express routes at this branch
+    typicalPerDay: 40,        // a good express day
+    upperPerDay: 70,          // beyond this is not a real day, even a busy one
+    ratePerParcel: 19.63,
+    variable: true
+  };
+
+  /* Food earnings a day, from the cohort's own distribution. This is the only
+     like-for-like scale we have: the 271 riders include the express holders,
+     and what appears here is everyone's FOOD earnings. So a rider is ranked on
+     their food work, and express is treated as additional income on top —
+     which is what it is. Ranking on the combined figure would put every express
+     rider at the top by construction and tell us nothing. */
+  var EARN_BANDS = { p25: 273, median: 453, p75: 553 };
+
+  var BUCKETS = [
+    { key: 'low',     label: 'Low',     blurb: 'Below most riders at this branch' },
+    { key: 'steady',  label: 'Steady',  blurb: 'Around the middle of the branch' },
+    { key: 'strong',  label: 'Strong',  blurb: 'Busier than three riders in four' },
+    { key: 'top',     label: 'Top',     blurb: 'Among the busiest at the branch' }
+  ];
+
+  /**
+   * Place a rider against the cohort and give a plain recommendation on
+   * whether to put a bike under them. Two separate questions are being
+   * answered: are their numbers believable, and do they clear the rental
+   * with enough room to be worth doing.
+   */
+  function classifyDriver(m) {
+    var food = m.inputs.foodJobs;
+    var foodEarnDay = food * m.inputs.foodRate;   // ranked on this, like-for-like
+    var earnDay = m.earnDay;                      // food and express, for affordability
+
+    var i =
+      foodEarnDay < EARN_BANDS.p25    ? 0 :
+      foodEarnDay < EARN_BANDS.median ? 1 :
+      foodEarnDay < EARN_BANDS.p75    ? 2 : 3;
+    var bucket = BUCKETS[i];
+
+    var pct =
+      foodEarnDay <= 0 ? 0 :
+      foodEarnDay < EARN_BANDS.p25    ? 25 * (foodEarnDay / EARN_BANDS.p25) :
+      foodEarnDay < EARN_BANDS.median ? 25 + 25 * (foodEarnDay - EARN_BANDS.p25) / (EARN_BANDS.median - EARN_BANDS.p25) :
+      foodEarnDay < EARN_BANDS.p75    ? 50 + 25 * (foodEarnDay - EARN_BANDS.median) / (EARN_BANDS.p75 - EARN_BANDS.median) :
+      Math.min(99, 75 + 24 * Math.min(1, (foodEarnDay - EARN_BANDS.p75) / EARN_BANDS.p75));
+
+    // does what they claim sit inside what anyone at the branch actually did
+    var plausible = food <= COHORT.jobsMax;
+    var margin = m.eNetWk;                        // what is left after the electric bike
+    var coversRental = m.earnWk > 0 ? m.eCostWk / m.earnWk : 1;
+
+    // The split moves week to week, so it describes their mix rather than
+    // ranking them. Express is checked only at the top end.
+    var foodShare = m.jobsDay > 0 ? food / m.jobsDay : 0;
+    var exp = m.inputs.expressJobs;
+    var expressClaim =
+      exp === 0                 ? 'none' :
+      exp > EXPRESS.upperPerDay ? 'above' :
+      exp >= EXPRESS.typicalPerDay ? 'busy' : 'mixed';
+
+    var mixNote =
+      expressClaim === 'none'
+        ? ' Food only, so their week is steadier but caps out lower.'
+        : ' Mix is about ' + Math.round(foodShare * 100) + '% food and ' +
+          Math.round((1 - foodShare) * 100) + '% express. Express is e-commerce driven, so that split ' +
+          'moves week to week — on light express days they top up with food.';
+
+    var margin = m.eNetWk;
+    var coversRental = m.earnWk > 0 ? m.eCostWk / m.earnWk : 1;
+
+    var verdict, reason;
+    if (expressClaim === 'above') {
+      verdict = 'Verify';
+      reason = 'Claims ' + exp.toFixed(0) + ' express parcels a day. Even a busy e-commerce day runs nearer ' +
+               EXPRESS.typicalPerDay + '. Check the numbers before proceeding.' + mixNote;
+    } else if (!plausible) {
+      verdict = 'Verify';
+      reason = 'Claims ' + food.toFixed(0) + ' food jobs a day. The busiest rider at the branch averaged ' +
+               COHORT.jobsMax + '. Check the numbers before proceeding.' + mixNote;
+    } else if (margin <= 0) {
+      verdict = 'Not yet';
+      reason = 'On their own numbers the bike costs more than they bring in. Not a fit today.' + mixNote;
+    } else if (coversRental <= 0.30 && i >= 1) {
+      verdict = 'Yes';
+      reason = 'Brings in ' + money(earnDay) + ' a day all in, and the bike takes only ' +
+               Math.round(coversRental * 100) + '% of it. On food alone they sit ' +
+               (i >= 2 ? 'ahead of most' : 'around the middle') + ' of the branch.' + mixNote;
+    } else if (coversRental <= 0.30) {
+      // light on food but the express side carries them
+      verdict = 'Yes, with checks';
+      reason = 'Brings in ' + money(earnDay) + ' a day all in and the bike takes ' +
+               Math.round(coversRental * 100) + '% of it, which is comfortable. Food work alone is light at ' +
+               money(foodEarnDay) + ' a day, so more of their income rides on express — confirm that with the operator.' + mixNote;
+    } else if (i === 0) {
+      verdict = 'Review';
+      reason = 'Food work of ' + money(foodEarnDay) + ' a day is below the branch bottom quartile, and the bike ' +
+               'would take ' + Math.round(coversRental * 100) + '% of everything they bring in. Thin.' + mixNote;
+    } else {
+      verdict = 'Yes, with checks';
+      reason = 'Brings in ' + money(earnDay) + ' a day all in. The bike takes ' +
+               Math.round(coversRental * 100) + '% of it, which is workable but not generous. Confirm volumes.' + mixNote;
+    }
+
+    return {
+      bucket: bucket.key, label: bucket.label, blurb: bucket.blurb,
+      percentile: Math.round(pct), plausible: plausible,
+      verdict: verdict, reason: reason,
+      foodShare: foodShare, earnDay: earnDay, foodEarnDay: foodEarnDay, bands: EARN_BANDS,
+      expressClaim: expressClaim, express: EXPRESS,
+      rentalShare: coversRental,
+      vsCohortJobs: food - COHORT.jobsMedian,
+      cohort: COHORT
+    };
+  }
+
   function computeDriver(raw) {
     raw = raw || {};
     var d = {
@@ -410,6 +556,7 @@
   return {
     CONSTANTS: C, DEFAULTS: DEFAULTS,
     DRIVER_DEFAULTS: DRIVER_DEFAULTS, computeDriver: computeDriver,
+    COHORT: COHORT, EXPRESS: EXPRESS, EARN_BANDS: EARN_BANDS, BUCKETS: BUCKETS, classifyDriver: classifyDriver,
     SAVINGS_DEFAULTS: SAVINGS_DEFAULTS, DAY_NAMES: DAY_NAMES,
     normaliseSavings: normaliseSavings, computeSavings: computeSavings,
     normalise: normalise, compute: compute, heroCareRate: heroCareRate, modelRules: modelRules,
